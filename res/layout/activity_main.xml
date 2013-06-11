@@ -4,31 +4,27 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity" >
 
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:text="@string/hello_world" />
-
     <EditText
-        android:id="@+id/editText1"
+        android:id="@+id/busNumber"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/textView1"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="28dp"
-        android:ems="10" />
+        android:ems="10"
+        android:hint="@string/search_hint"
+        android:inputType="text" />
 
-    <TextView
-        android:id="@+id/textView1"
+    <Button
+        android:id="@+id/button1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="56dp"
-        android:text="Bus or Stop Number"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:layout_alignLeft="@+id/busNumber"
+        android:layout_alignRight="@+id/busNumber"
+        android:layout_below="@+id/busNumber"
+        android:layout_marginTop="19dp"
+        android:text="@string/search_button_text"
+        android:onClick="sendMessage" />
+    
+
 
 </RelativeLayout>
