@@ -12,7 +12,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 public class MainActivity extends Activity {
-	 public final static String EXTRA_MESSAGE = "com.yene.BUSNUMBER";
+	 public final static String BUS_NO_MESSAGE = "com.yene.BUSNUMBER";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +39,7 @@ public class MainActivity extends Activity {
 		Toast toast = Toast.makeText(context, text, duration);
 		toast.show();
 	    }else{
-	    	 intent.putExtra(EXTRA_MESSAGE, search_term);
+	    	 intent.putExtra(BUS_NO_MESSAGE, search_term);
 	 	    startActivity(intent);
 	    }
 		
