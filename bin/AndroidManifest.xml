@@ -7,21 +7,30 @@
     <uses-sdk
         android:minSdkVersion="8"
         android:targetSdkVersion="17" />
-
+    
+   <uses-permission android:name="android.permission.INTERNET"></uses-permission>
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name="com.yene.example.bustiming.MainActivity"
+            android:name="com.yene.bustiming.MainActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+        	android:name="com.yene.bustiming.Direction"
+        	android:label="@string/Select_direction"
+        	android:parentActivityName="com.yene.bustiming.MainActivity" >
+        <meta-data
+            android:name="android.support.PARENT_ACTIVITY"
+            android:value="com.yene.bustiming.Direction" />
+    </activity>
+        
     </application>
 
 </manifest>

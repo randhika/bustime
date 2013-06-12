@@ -28,13 +28,13 @@ public class MainActivity extends Activity {
 	}
 	
 	public void sendMessage (View view){
-		Intent intent = new Intent(this, SearchResults.class);
-	    EditText editText = (EditText) findViewById(R.id.busNumber);
+		Intent intent = new Intent(this, Direction.class);
+	    EditText editText = (EditText) findViewById(R.id.busN);
 	    String search_term = editText.getText().toString();
 	    
 	    if(search_term.length()<1 || search_term.length()>5){
 	    Context context = getApplicationContext();
-		CharSequence text = "Please Enter BUS Number";
+		CharSequence text = "Please Enter Bus Number";
 		int duration = Toast.LENGTH_SHORT;
 		Toast toast = Toast.makeText(context, text, duration);
 		toast.show();

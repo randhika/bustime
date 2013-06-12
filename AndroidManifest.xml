@@ -23,12 +23,12 @@
             </intent-filter>
         </activity>
         <activity
-        	android:name="com.yene.bustiming.SearchResults"
+        	android:name="com.yene.bustiming.Direction"
         	android:label="@string/Select_direction"
         	android:parentActivityName="com.yene.bustiming.MainActivity" >
         <meta-data
             android:name="android.support.PARENT_ACTIVITY"
-            android:value="com.yene.bustiming.SearchResults" />
+            android:value="com.yene.bustiming.Direction" />
     </activity>
         
     </application>
