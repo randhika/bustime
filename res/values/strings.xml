@@ -6,7 +6,9 @@
     <string name="search_title">Bus Number</string>
     <string name="search_button_text">Search</string>
     <string name="search_hint">Enter Bus No.</string>
-    <string name="Select_direction">Select Direction</string>
+    <string name="select_direction">Select Direction</string>
+    <string name="select_bus_stop">Select Bus Stop</string>
+    <string name="select_bus_name">Bus Stop</string>
      
 
 </resources>

@@ -16,14 +16,15 @@ import android.view.Menu;
 import android.view.View;
 
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
 import com.yene.example.bustiming.R;
 
-public class BusStopList extends ListActivity {
-	
-	 public static final String BUS_STOP_NAME = "com.yene.BUSSTOPNAME";
+public class BusStop extends ListActivity {
+	 public final static String BUS_MESSAGE = "com.yene.BUSNUMBER";
+	 public static final String BUS_DIRECTION = "com.yene.BUSDIRECTION";
      public JSONParser  gerUrl = new JSONParser();
      ArrayList<String> item = new ArrayList<String>();
      String busNumber;
@@ -34,7 +35,7 @@ public class BusStopList extends ListActivity {
 		Context context = getApplicationContext();
 		Intent intent = getIntent();
 		int duration = Toast.LENGTH_SHORT;
-		busNumber = intent.getStringExtra(Direction.BUS_DIRECTION);
+		busNumber = intent.getStringExtra(MainActivity.BUS_NO_MESSAGE);
 		Toast toast = Toast.makeText(context, busNumber, duration);
 		toast.show();
 	
@@ -52,20 +53,20 @@ public class BusStopList extends ListActivity {
 	protected void onListItemClick(ListView l, View v, int position, long id) {
 	    String item = (String) getListAdapter().getItem(position);
 	    Toast.makeText(this, item + " selected", Toast.LENGTH_LONG).show();
-	    openBusStop(item);
+	    //openBusStopList(item,busNumber);
 	  }
 	
-	public void openBusStop (String busStopName){
-		Intent intent = new Intent(this, BusStop.class);
+	public void openBusStopList (String direction, String busNumber){
+		Intent intent = new Intent(this, BusStopList.class);
 	   
-	    String search_term = busStopName;
+	    String search_term = direction+","+busNumber;
 	    
 	    Context context = getApplicationContext();
 		CharSequence text = search_term;
 		int duration = Toast.LENGTH_SHORT;
 		Toast toast = Toast.makeText(context, text, duration);
 		toast.show();
-	    intent.putExtra(BUS_STOP_NAME, search_term);
+	    intent.putExtra(BUS_DIRECTION, search_term);
 	 	startActivity(intent);
 	}
 	
@@ -87,17 +88,19 @@ public class BusStopList extends ListActivity {
 	    	 for(int index = 0 ; index < item.size(); index++){
 	    		 String []busDirection= item.get(index).split("\"",0);
 	    		 direction.add(busDirection[1]);
+	    		 
+	    		 direction.add(busDirection[3]);
+	    		 direction.add(busDirection[4].replace("]", ""));
 	    		 Log.d(TAG, busDirection[1]);
 	    	 }
-	    	    ArrayAdapter<String> adapter = new ArrayAdapter<String>(BusStopList.this,R.layout.select_direction, R.id.label, direction);
+	    	    ArrayAdapter<String> adapter = new ArrayAdapter<String>(BusStop.this,R.layout.select_direction, R.id.label, direction);
 			    setListAdapter(adapter);
 	     }
 
 		@Override
 		protected Long doInBackground(URL... params) {
-			String []busAndDirection = busNumber.split(",");
-			String url ="http://countdown.api.tfl.gov.uk/interfaces/ura/instant_V1?LineName="+busAndDirection[1]+",DestinationText="+busAndDirection[0].replace(" ", "")+"&ReturnList=StopPointName";
-			Log.d(TAG,url);
+			String url = "http://countdown.api.tfl.gov.uk/interfaces/ura/instant_V1?StopPointName=Islington%20Green,LineName=38&ReturnList=StopPointName,LineName,EstimatedTime";
+			//String url = "http://countdown.api.tfl.gov.uk/interfaces/ura/instant_V1?LineName="+busNumber+"&ReturnList=DestinationText";
 			item = gerUrl.getJSONFromUrl(url);
 			return null;
 		}

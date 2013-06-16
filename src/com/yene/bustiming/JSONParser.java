@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
  
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -22,13 +23,14 @@ public class JSONParser {
 	static InputStream is = null;
     static JSONObject jObj = null;
     static String json = "";
+    ArrayList<String> result;
  
     // constructor
     public JSONParser() {
- 
+    	 Log.d(TAG,"Get data from web has strated");
     }
  
-    public JSONObject getJSONFromUrl(String url) {
+    public ArrayList<String> getJSONFromUrl(String url) {
  
         // Making HTTP request
         try {
@@ -51,9 +53,11 @@ public class JSONParser {
         try {
             BufferedReader reader = new BufferedReader(new InputStreamReader(is, "iso-8859-1"), 8);
             StringBuilder sb = new StringBuilder();
+            result = new ArrayList<String>();
             String line = null;
             while ((line = reader.readLine()) != null) {
                 sb.append(line + "\n");
+                result.add(line);
                 Log.d(TAG,line);
             }
             is.close();
@@ -62,15 +66,10 @@ public class JSONParser {
             Log.e("Buffer Error", "Error converting result " + e.toString());
         }
  
-        // try parse the string to a JSON object
-        try {
-            jObj = new JSONObject(json);
-        } catch (JSONException e) {
-            Log.e("JSON Parser", "Error parsing data " + e.toString());
-        }
+       
  
         // return JSON String
-        return jObj;
+        return result;
  
     }
 }

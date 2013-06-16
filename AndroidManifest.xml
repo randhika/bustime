@@ -24,12 +24,28 @@
         </activity>
         <activity
         	android:name="com.yene.bustiming.Direction"
-        	android:label="@string/Select_direction"
+        	android:label="@string/select_direction"
         	android:parentActivityName="com.yene.bustiming.MainActivity" >
         <meta-data
             android:name="android.support.PARENT_ACTIVITY"
             android:value="com.yene.bustiming.Direction" />
-    </activity>
+    	</activity>
+    	<activity
+        	android:name="com.yene.bustiming.BusStopList"
+        	android:label="@string/select_bus_stop"
+        	android:parentActivityName="com.yene.bustiming.Direction" >
+        <meta-data
+            android:name="android.support.PARENT_ACTIVITY"
+            android:value="com.yene.bustiming.BusStopList" />
+    	</activity>
+    	<activity
+        	android:name="com.yene.bustiming.BusStop"
+        	android:label="@string/select_bus_name"
+        	android:parentActivityName="com.yene.bustiming.BusStopList" >
+        <meta-data
+            android:name="android.support.PARENT_ACTIVITY"
+            android:value="com.yene.bustiming.BusStop" />
+    	</activity>
         
     </application>
 
