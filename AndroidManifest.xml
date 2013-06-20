@@ -8,8 +8,12 @@
         android:minSdkVersion="8"
         android:targetSdkVersion="17" />
     
-   <uses-permission android:name="android.permission.INTERNET"></uses-permission>
-   <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+   	<uses-permission android:name="android.permission.INTERNET"></uses-permission>
+   	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+   	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+	<uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES"/>
+    <uses-feature    android:glEsVersion="0x00020000"   android:required="true"/>
+	
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
@@ -30,6 +34,14 @@
         <meta-data
             android:name="android.support.PARENT_ACTIVITY"
             android:value="com.yene.bustiming.Direction" />
+    	</activity>
+    	 <activity
+        	android:name="com.yene.bustiming.NearbyStop"
+        	android:label="@string/select_direction"
+        	android:parentActivityName="com.yene.bustiming.MainActivity" >
+        <meta-data
+            android:name="android.support.PARENT_ACTIVITY"
+            android:value="com.yene.bustiming.NearbyStop" />
     	</activity>
     	<activity
         	android:name="com.yene.bustiming.BusStopList"

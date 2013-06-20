@@ -2,14 +2,14 @@ package com.yene.bustiming;
 
 import com.yene.example.bustiming.R;
 
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.net.NetworkInfo.State;
 import android.os.Bundle;
 import android.app.Activity;
+
 import android.content.Context;
+
 import android.content.Intent;
-import android.util.Log;
+
 import android.view.Menu;
 import android.view.View;
 import android.widget.EditText;
@@ -20,18 +20,16 @@ public class MainActivity extends Activity {
 	 private boolean isConnected = false;
 	 Context context;
 	 State wifi;
+	 ConnectionDetector cd;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		context = getApplicationContext();
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		ConnectivityManager cm = (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
-		
-		wifi = cm.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState();
-		if (wifi == NetworkInfo.State.CONNECTED || wifi == NetworkInfo.State.CONNECTING) {
-			Log.d("isConnection",""+isConnected);
-		}    isConnected = true;
+		cd = new ConnectionDetector(context);
+		isConnected = cd.isConnectingToInternet();
+	
 	}
 
 	@Override
@@ -52,11 +50,8 @@ public class MainActivity extends Activity {
 			int duration = Toast.LENGTH_SHORT;
 			Toast toast = Toast.makeText(context, text, duration);
 			toast.show();
-	    }else if(!isConnected){
-	    	CharSequence text = "Need Internet Connection";
-			int duration = Toast.LENGTH_SHORT;
-			Toast toast = Toast.makeText(context, text, duration);
-			toast.show();
+	    }else if(!isConnected){	
+			cd.showAlertDialog(MainActivity.this, "No Connection", "Please enable your internet connection.", false);
 	    	
 	    }else if(isConnected){
 	    	 intent.putExtra(BUS_NO_MESSAGE, search_term);
@@ -65,20 +60,10 @@ public class MainActivity extends Activity {
 	}
 	
 	public void findNearByStop (View view){
-		Intent intent = new Intent(this, Direction.class);
-	    EditText editText = (EditText) findViewById(R.id.busN);
-	    String search_term = editText.getText().toString();
-	    
-	    if(search_term.length()<1 || search_term.length()>5){
-		    Context context = getApplicationContext();
-			CharSequence text = "Searching for you Location";
-			int duration = Toast.LENGTH_SHORT;
-			Toast toast = Toast.makeText(context, text, duration);
-			toast.show();
-	    }else{
-	    	 intent.putExtra(BUS_NO_MESSAGE, search_term);
-	 	    startActivity(intent);
-	    }
+		
+		Intent intent = new Intent(this, NearbyStop.class);
+		startActivity(intent);
+		
 	}
 
 }
