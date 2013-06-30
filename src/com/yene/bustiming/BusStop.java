@@ -2,7 +2,10 @@ package com.yene.bustiming;
 
 
 import java.net.URL;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -27,7 +30,7 @@ public class BusStop extends ListActivity {
 	 public static final String BUS_DIRECTION = "com.yene.BUSDIRECTION";
      public JSONParser  gerUrl = new JSONParser();
      ArrayList<String> item = new ArrayList<String>();
-     String busNumber;
+     String busStopID;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -35,8 +38,8 @@ public class BusStop extends ListActivity {
 		Context context = getApplicationContext();
 		Intent intent = getIntent();
 		int duration = Toast.LENGTH_SHORT;
-		busNumber = intent.getStringExtra(MainActivity.BUS_NO_MESSAGE);
-		Toast toast = Toast.makeText(context, busNumber, duration);
+		busStopID = intent.getStringExtra(MainActivity.BUS_NO_MESSAGE);
+		Toast toast = Toast.makeText(context, busStopID, duration);
 		toast.show();
 	
 		
@@ -49,8 +52,7 @@ public class BusStop extends ListActivity {
 		getMenuInflater().inflate(R.menu.activity_main, menu);
 		return true;
 	}
-	@Override
-	protected void onListItemClick(ListView l, View v, int position, long id) {
+	protected void onListItemClick(CustomListAdapter l, View v, int position, long id) {
 	    String item = (String) getListAdapter().getItem(position);
 	    Toast.makeText(this, item + " selected", Toast.LENGTH_LONG).show();
 	    //openBusStopList(item,busNumber);
@@ -77,33 +79,85 @@ public class BusStop extends ListActivity {
 		protected void onProgressUpdate(Integer... progress) {
 	         //setProgressPercent(progress[0]);
 	     }
+		
+		private String convertDate( Long str )
+		{
+			//Date epoch = new Date(str);
+			Date countDown = new Date(str);
+			Date currentTime = new Date();
+			
+			SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+			String dateStop = DATE_FORMAT.format(countDown);
+			String  dateStart = DATE_FORMAT.format(currentTime);
+			
+			
+			
+			
+			
+	 
+			//HH converts hour in 24 hours format (0-23), day calculation
+			SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+	 
+			Date d1 = null;
+			Date d2 = null;
+			Long diffMinutes =null;
+			try {
+				d1 = format.parse(dateStart);
+				d2 = format.parse(dateStop);
+	 
+				//in milliseconds
+				long diff = d2.getTime() - d1.getTime();
+	 
+				long diffSeconds = diff / 1000 % 60;
+				 	 diffMinutes = diff / (60 * 1000) % 60;
+				long diffHours = diff / (60 * 60 * 1000) % 24;
+				long diffDays = diff / (24 * 60 * 60 * 1000);
+	 
+				System.out.print(diffDays + " days, ");
+				System.out.print(diffHours + " hours, ");
+				System.out.print(diffMinutes + " minutes, ");
+				System.out.print(diffSeconds + " seconds.");
+	 
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+	 
+			return ""+diffMinutes +"(min)  ";
+			 
+		
+			 
+		}
 
 	     protected void onPostExecute(Long result) {
 	    	
-	    	 item.remove(0);
-	    	 Set<String> setItems = new LinkedHashSet<String>(item);
-	    	 item.clear();
-	    	 item.addAll(setItems);
-	    	ArrayList<String> direction = new  ArrayList<String>();
+	    	item.remove(0);
+	    	ArrayList<BusStopObject> timeArrivle = new  ArrayList<BusStopObject>();
+	    	
 	    	 for(int index = 0 ; index < item.size(); index++){
-	    		 String []busDirection= item.get(index).split("\"",0);
-	    		 direction.add(busDirection[1]);
+	    		 BusStopObject busStopObj = new BusStopObject();
+	    		 Log.d(TAG+"Before spilt", item.get(index));
+	    		 String []busDirection= item.get(index).split(",",0);
+	    		 String arrivTime = busDirection[3].replace("]", "");
+	    		 //convertDate( Long.parseLong(arrivTime, 10));
 	    		 
-	    		 direction.add(busDirection[3]);
-	    		 direction.add(busDirection[4].replace("]", ""));
+	    		 busStopObj.setstopName(busDirection[1].replace("\"", ""));
+	 	         busStopObj.setbusNumber(busDirection[2].replace("\"", ""));
+	 	         busStopObj.setcountDown(convertDate( Long.parseLong(arrivTime, 10)));
 	    		 Log.d(TAG, busDirection[1]);
+	    		 timeArrivle.add(busStopObj);
 	    	 }
-	    	    ArrayAdapter<String> adapter = new ArrayAdapter<String>(BusStop.this,R.layout.select_direction, R.id.label, direction);
-			    setListAdapter(adapter);
+	    	   
+			    setListAdapter(new CustomListAdapter(BusStop.this, timeArrivle));
+			 
 	     }
 
 		@Override
 		protected Long doInBackground(URL... params) {
-			String url = "http://countdown.api.tfl.gov.uk/interfaces/ura/instant_V1?StopPointName=Islington%20Green,LineName=38&ReturnList=StopPointName,LineName,EstimatedTime";
-			//String url = "http://countdown.api.tfl.gov.uk/interfaces/ura/instant_V1?LineName="+busNumber+"&ReturnList=DestinationText";
+			
+			String url = "http://countdown.api.tfl.gov.uk/interfaces/ura/instant_V1?Stopid="+busStopID;
 			item = gerUrl.getJSONFromUrl(url);
 			return null;
 		}
-	 }
-	 
+	
+	}
 } 

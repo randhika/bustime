@@ -90,7 +90,7 @@ public class Direction extends ListActivity {
 	    		 direction.add(busDirection[1]);
 	    		 Log.d(TAG, busDirection[1]);
 	    	 }
-	    	    ArrayAdapter<String> adapter = new ArrayAdapter<String>(Direction.this,R.layout.select_direction, R.id.label, direction);
+	    	    ArrayAdapter<String> adapter = new ArrayAdapter<String>(Direction.this,R.layout.select_direction, R.id.stopName, direction);
 			    setListAdapter(adapter);
 	     }
 

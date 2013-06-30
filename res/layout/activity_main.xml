@@ -4,36 +4,29 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity" >
 
-    <EditText
-        android:id="@+id/busN"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="28dp"
-        android:ems="10"
-        android:hint="@string/search_hint"
-        android:inputType="text" />
-
     <Button
         android:id="@+id/button1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/busN"
-        android:layout_alignRight="@+id/busN"
-        android:layout_below="@+id/busN"
-        android:layout_marginTop="19dp"
-        android:text="@string/search_button_text"
-        android:onClick="sendMessage" />
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:onClick="sendMessage"
+        android:text="@string/search_button_text" />
 
-    <Button
-        android:id="@+id/button2"
+    <EditText
+        android:id="@+id/busN"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/button1"
-        android:layout_alignRight="@+id/button1"
-        android:layout_below="@+id/button1"
-        android:layout_marginTop="105dp"
-        android:text="@string/near_by_stop" 
-        android:onClick="findNearByStop" />
+        android:layout_above="@+id/button1"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="46dp"
+        android:ems="10"
+        android:hint="@string/search_hint"
+        android:inputType="number"
+        android:shadowColor="#999999" >
+
+        <requestFocus />
+    </EditText>
 
 </RelativeLayout>

@@ -40,7 +40,7 @@ public class MainActivity extends Activity {
 	}
 	
 	public void sendMessage (View view){
-		Intent intent = new Intent(this, Direction.class);
+		Intent intent = new Intent(this, BusStop.class);
 	    EditText editText = (EditText) findViewById(R.id.busN);
 	    String search_term = editText.getText().toString();
 	    
