@@ -3,6 +3,7 @@ package com.yene.bustiming;
 import java.util.ArrayList;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,7 +13,9 @@ import android.widget.TextView;
 import com.yene.example.bustiming.R;
 public class CustomListAdapter extends BaseAdapter {
 	 
-    private ArrayList<BusStopObject> listData;
+    private static final String TAG = "CUSTOMLISTADAPTER";
+
+	private ArrayList<BusStopObject> listData;
  
     private LayoutInflater layoutInflater;
  
@@ -48,7 +51,7 @@ public class CustomListAdapter extends BaseAdapter {
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
- 
+        
         holder.headlineView.setText(""+listData.get(position).getstopName());
         holder.reporterNameView.setText(listData.get(position).getbusNumber());
         holder.reportedDateView.setText(listData.get(position).getcountDown());
