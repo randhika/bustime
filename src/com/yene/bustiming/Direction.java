@@ -29,7 +29,7 @@ public class Direction extends ListActivity {
      ArrayList<String> item = new ArrayList<String>();
      String busNumber;
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	protected void onCreate(Bundle savedInstanceState) {	
 		super.onCreate(savedInstanceState);
 		//setContentView(R.layout.select_direction);
 		Context context = getApplicationContext();
