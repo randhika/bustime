@@ -18,24 +18,24 @@
 
     <Button
         android:id="@+id/button1"
+        style="@style/ButtonText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/busN"
         android:layout_alignRight="@+id/busN"
         android:layout_below="@+id/busN"
         android:layout_marginTop="26dp"
-        android:gravity="center"
-        android:onClick="sendMessage"        
-        style="@style/ButtonText"
         android:background="@drawable/green"
+        android:gravity="center"
+        android:onClick="sendMessage"
         android:text="@string/search_button_text" />
-    
+
     <LinearLayout
         android:id="@+id/linearLayout1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dip"
         android:layout_below="@+id/button1"
+        android:layout_marginTop="10dip"
         android:orientation="horizontal" >
 
         <TextView
@@ -56,12 +56,12 @@
             android:textSize="12sp" >
         </TextView>
     </LinearLayout>
-    
-       <LinearLayout
+
+    <LinearLayout
         android:id="@+id/linearLayout2"
         android:layout_width="match_parent"
-        android:layout_below="@+id/linearLayout1"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/linearLayout1" >
 
         <TextView
             android:id="@+id/TextView03"
@@ -80,48 +80,44 @@
             android:text="searching..."
             android:textSize="12sp" >
         </TextView>
-        
-         
-	</LinearLayout>
-	  
-    
-       <LinearLayout
+    </LinearLayout>
+
+    <LinearLayout
         android:id="@+id/linearLayout3"
         android:layout_width="match_parent"
-        android:layout_below="@+id/linearLayout2"
-        android:layout_height="wrap_content" >
-       
-          <TextView
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/linearLayout2" >
+
+        <TextView
             android:id="@+id/TextView05"
-            android:paddingLeft="10dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:paddingLeft="10dp"
             android:text="Near by Bus Stop"
-            android:textSize="25sp" >
+            android:textSize="12sp" >
         </TextView>
-	</LinearLayout>
-       
+    </LinearLayout>
 
-       <ListView
-           android:id="@+id/listView1"
-           android:layout_below="@+id/linearLayout3"
-           android:background="#000000"
-           android:layout_width="match_parent"
-           android:layout_height="wrap_content"
-           android:layout_alignParentBottom="true"
-           android:layout_alignParentLeft="true"
-            >
-       </ListView>
-       
-         <TextView
-           android:id="@+id/TextView06"
-           android:layout_below="@+id/linearLayout3"
-           
-           android:layout_width="match_parent"
-           android:layout_height="wrap_content"
-           android:layout_alignParentBottom="true"
-           android:layout_alignParentLeft="true"
-           android:layout_marginBottom="29dp" >
-       </TextView>
+    <ListView
+        android:id="@+id/listView1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/linearLayout3"
+        android:background="#000000" >
+    </ListView>
+
+ 
+
+    <ExpandableListView
+        android:id="@+id/expandableListView1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true" 
+        android:layout_below="@+id/listView1"
+        >
+
+    </ExpandableListView>
 
 </RelativeLayout>

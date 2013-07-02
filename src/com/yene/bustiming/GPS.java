@@ -16,9 +16,10 @@ public class GPS {
 	private static final String TAG = "GPS";
 	private LocationManager locationManager;
 	private String latituteField,longitudeField;
+	private MainActivity mainactivity;
 	 
-	 public GPS(MainActivity mainactivity){
-		 
+	 public GPS(final MainActivity mainactivity){
+		 this.mainactivity = mainactivity;
 		 
 		// Acquire a reference to the system Location Manager
 		 locationManager = (LocationManager) mainactivity.getSystemService(Context.LOCATION_SERVICE);
@@ -28,7 +29,7 @@ public class GPS {
 		       // Called when a new location is found by the network location provider.
 		    	
 		       makeUseOfNewLocation(location);
-		       MainActivity.getGpsCoor(getLatituteField(),getLongitudeField());
+		       mainactivity.getGpsCoor(getLatituteField(),getLongitudeField());
 				
 		     }
 
