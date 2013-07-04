@@ -1,9 +1,9 @@
 package com.yene.bustiming;
 
 import com.yene.example.bustiming.R;
-import android.net.NetworkInfo.State;
 import android.os.Bundle;
 import android.app.Activity;
+import android.app.ListActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
@@ -13,7 +13,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class MainActivity extends Activity {
+public class MainActivity extends ListActivity {
 	 public final static String BUS_NO_MESSAGE = "com.yene.BUSNUMBER";
 	 private static final String TAG = "MAIN ACTIVITY";
 	 private boolean isConnected = false;
@@ -22,26 +22,26 @@ public class MainActivity extends Activity {
 	 private ConnectionDetector cd;
 	 private static TextView latituteField;
 	 private static TextView longitudeField;
-	 private DownloadFileTask downloadfile;
+	 private RequestBusStop downloadfile;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		context = getApplicationContext();
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_main);
+		//setContentView(R.layout.activity_main);
 		cd = new ConnectionDetector(context);
-		latituteField = (TextView) findViewById(R.id.TextView02);
-	    longitudeField = (TextView) findViewById(R.id.TextView04);
+		//latituteField = (TextView) findViewById(R.id.TextView02);
+	    //longitudeField = (TextView) findViewById(R.id.TextView04);
 		gps = new GPS(MainActivity.this);
-		Toast.makeText(this, "gps.getLatituteField() " + gps.getLatituteField(),Toast.LENGTH_SHORT).show();
+		//Toast.makeText(this, "gps.getLatituteField() " + gps.getLatituteField(),Toast.LENGTH_SHORT).show();
 		isConnected = cd.isConnectingToInternet();
 		
 	}
 	public void getGpsCoor(String lat , String lng){
-		latituteField.setText(lat);
-		longitudeField.setText(lng);
+		//latituteField.setText(lat);
+		//longitudeField.setText(lng);
 		Log.d(TAG,"mainactivity");
-		downloadfile = new DownloadFileTask(this,lat,lng);
+		downloadfile = new RequestBusStop(this,lat,lng);
 		downloadfile.execute();
 	}
 	@Override

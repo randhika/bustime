@@ -2,11 +2,21 @@ package com.yene.bustiming;
 
 public class BusStopObject {
 
-	 private String busNumber;
+	    private String busNumber;
 	    private String countDown;
 	    private String stopName;
-	 
-	    public String getbusNumber() {
+	    private String towards;
+	    private String lineID;
+	    
+	    public String getLineID() {
+			return lineID;
+		}
+
+		public void setLineID(String lineID) {
+			this.lineID = lineID;
+		}
+
+		public String getbusNumber() {
 	        return busNumber;
 	    }
 	 
@@ -29,11 +39,20 @@ public class BusStopObject {
 	    public void setstopName(String stopName) {
 	        this.stopName = stopName;
 	    }
-	 
+	
+		public String getTowards() {
+			return towards;
+		}
+
+		public void setTowards(String towards) {
+			this.towards = towards;
+		}
+		 
 	    @Override
 	    public String toString() {
 	        return "[ busNumber=" + busNumber + ", reporter Name=" + 
 	                countDown + " , stopName=" + stopName + "]";
 	    }
+
 
 }

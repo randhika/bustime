@@ -12,13 +12,13 @@ import android.widget.ListView;
 
 import com.yene.example.bustiming.R;
 
-public class DownloadFileTask extends AsyncTask<URL, Integer, Long> {
+public class RequestBusStop extends AsyncTask<URL, Integer, Long> {
 	private ArrayList<String> item = new ArrayList<String>();
 	public JSONParser  gerUrl = new JSONParser();
 	public MainActivity mainActivity; 
     private static final String TAG = "DownloadFilesTaskCalled";
     private String lat,lng;
-    public DownloadFileTask(MainActivity mainActivity,String lat, String lng ){
+    public RequestBusStop(MainActivity mainActivity,String lat, String lng ){
     	this.mainActivity = mainActivity;
     	this.lat =lat;
     	this.lng =lng;
@@ -30,24 +30,32 @@ public class DownloadFileTask extends AsyncTask<URL, Integer, Long> {
     protected void onPostExecute(Long result) {
    	
    	 item.remove(0);
-   	 Set<String> setItems = new LinkedHashSet<String>(item);
-   	 item.clear();
-   	 item.addAll(setItems);
+   	 
+   	ArrayList<BusStopObject> busStopData = new  ArrayList<BusStopObject>();
+   	
    	ArrayList<String> direction = new  ArrayList<String>();
    	 for(int index = 0 ; index < item.size(); index++){
+   		BusStopObject busStopObj = new BusStopObject();
+   		
    		 String []busDirection= item.get(index).split("\"",0);
-   		 direction.add(busDirection[1]);
-   		 Log.d(TAG, busDirection[1]);
+   		 busStopObj.setTowards(busDirection[5]);
+   		 busStopObj.setstopName(busDirection[1].replace("\"", ""));
+   		 busStopObj.setbusNumber("[23,24,5,4]");
+   		 direction.add(busDirection[5]);
+   		 Log.d(TAG, busDirection[5]);
+   		 
+   		busStopData.add(busStopObj);
    	 }
-   	    ArrayAdapter<String> adapter = new ArrayAdapter<String>(mainActivity, R.layout.app_title, direction);
-   	    ListView listview = (ListView) mainActivity.findViewById(R.id.listView1);
-   	    listview.setAdapter(adapter);
+   	    //ArrayAdapter<String> adapter = new ArrayAdapter<String>(mainActivity, R.layout.app_title, direction);
+   	    //ListView listview = (ListView) mainActivity.findViewById(R.id.listView1);
+   	    //listview.setAdapter(adapter);
+   	    mainActivity.setListAdapter(new CustomListBusStops(mainActivity, busStopData));
     }
 
 	@Override
 	protected Long doInBackground(URL... params) {
 		Log.d(TAG,"lat: "+lat+":::lng: "+lng);
-		String url = "http://countdown.api.tfl.gov.uk/interfaces/ura/instant_V1?Circle="+lat+","+lng+",250&ReturnList=StopCode1,StopPointName,StopPointIndicator";
+		String url = "http://countdown.api.tfl.gov.uk/interfaces/ura/instant_V1?Circle="+lat+","+lng+",250&ReturnList=StopCode1,StopPointName,StopPointIndicator,Towards";
 		item = gerUrl.getJSONFromUrl(url);
 		return null;
 	}
