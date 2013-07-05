@@ -38,9 +38,7 @@ public class BusStop extends ListActivity {
 		busStopID = intent.getStringExtra(MainActivity.BUS_NO_MESSAGE);
 		Toast toast = Toast.makeText(context, busStopID, duration);
 		toast.show();
-	
-		
-		    new DownloadFilesTask().execute();
+		new DownloadFilesTask().execute();
 	}
 
 	@Override
@@ -144,7 +142,7 @@ public class BusStop extends ListActivity {
 		protected Long doInBackground(URL... params) {
 			
 			String url = "http://countdown.api.tfl.gov.uk/interfaces/ura/instant_V1?StopCode1="+busStopID;
-			item = gerUrl.getJSONFromUrl(url);
+			//item = gerUrl.getJSONFromUrl(url);
 			//ConnectionDetector cd;
 			//cd = new ConnectionDetector(BusStop.this);
 			//cd.showAlertDialog(BusStop.this, "Number of Bus At this Bus Stop", ""+item.size(), false);

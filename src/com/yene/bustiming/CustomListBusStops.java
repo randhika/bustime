@@ -14,26 +14,21 @@ import com.yene.example.bustiming.R;
 public class CustomListBusStops extends BaseAdapter {
 	 
     private static final String TAG = "CUSTOMLISTADAPTER";
-
-	private ArrayList<BusStopObject> listData;
- 
+	private ArrayList<BusStopObject> busStopList;
     private LayoutInflater layoutInflater;
  
-    public CustomListBusStops(Context context, ArrayList<BusStopObject> listData) {
-        this.listData = listData;
+    public CustomListBusStops(Context context, ArrayList<BusStopObject> busStopList) {
+        this.busStopList = busStopList;
         layoutInflater = LayoutInflater.from(context);
     }
- 
     @Override
     public int getCount() {
-        return listData.size();
+        return busStopList.size();
     }
- 
     @Override
     public Object getItem(int position) {
-        return listData.get(position);
+        return busStopList.get(position);
     }
- 
     @Override
     public long getItemId(int position) {
         return position;
@@ -52,9 +47,9 @@ public class CustomListBusStops extends BaseAdapter {
             holder = (ViewHolder) convertView.getTag();
         }
         
-        holder.headlineView.setText(""+listData.get(position).getstopName());
-        holder.reporterNameView.setText(listData.get(position).getbusNumber());
-        holder.reportedDateView.setText(listData.get(position).getTowards());
+        holder.headlineView.setText(""+busStopList.get(position).getstopName());
+        holder.reporterNameView.setText(busStopList.get(position).getbusNumber());
+        holder.reportedDateView.setText(busStopList.get(position).getTowards());
  
         return convertView;
     }

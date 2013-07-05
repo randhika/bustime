@@ -52,9 +52,9 @@ public class CustomListAdapter extends BaseAdapter {
             holder = (ViewHolder) convertView.getTag();
         }
         
-        holder.headlineView.setText(""+listData.get(position).getstopName());
-        holder.reporterNameView.setText(listData.get(position).getbusNumber());
-        holder.reportedDateView.setText(listData.get(position).getcountDown());
+       // holder.headlineView.setText(""+listData.get(position).getstopName());
+        //holder.reporterNameView.setText(listData.get(position).getbusNumber());
+        //holder.reportedDateView.setText(listData.get(position).getTowards());
  
         return convertView;
     }

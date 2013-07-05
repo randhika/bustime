@@ -13,7 +13,7 @@ import android.widget.ListView;
 import com.yene.example.bustiming.R;
 
 public class RequestBusStop extends AsyncTask<URL, Integer, Long> {
-	private ArrayList<String> item = new ArrayList<String>();
+	private ArrayList<BusStopObject> item = new ArrayList<BusStopObject>();
 	public JSONParser  gerUrl = new JSONParser();
 	public MainActivity mainActivity; 
     private static final String TAG = "DownloadFilesTaskCalled";
@@ -30,26 +30,7 @@ public class RequestBusStop extends AsyncTask<URL, Integer, Long> {
     protected void onPostExecute(Long result) {
    	
    	 item.remove(0);
-   	 
-   	ArrayList<BusStopObject> busStopData = new  ArrayList<BusStopObject>();
-   	
-   	ArrayList<String> direction = new  ArrayList<String>();
-   	 for(int index = 0 ; index < item.size(); index++){
-   		BusStopObject busStopObj = new BusStopObject();
-   		
-   		 String []busDirection= item.get(index).split("\"",0);
-   		 busStopObj.setTowards(busDirection[5]);
-   		 busStopObj.setstopName(busDirection[1].replace("\"", ""));
-   		 busStopObj.setbusNumber("[23,24,5,4]");
-   		 direction.add(busDirection[5]);
-   		 Log.d(TAG, busDirection[5]);
-   		 
-   		busStopData.add(busStopObj);
-   	 }
-   	    //ArrayAdapter<String> adapter = new ArrayAdapter<String>(mainActivity, R.layout.app_title, direction);
-   	    //ListView listview = (ListView) mainActivity.findViewById(R.id.listView1);
-   	    //listview.setAdapter(adapter);
-   	    mainActivity.setListAdapter(new CustomListBusStops(mainActivity, busStopData));
+   	 mainActivity.setListAdapter(new CustomListBusStops(mainActivity, item));
     }
 
 	@Override

@@ -97,7 +97,7 @@ public class Direction extends ListActivity {
 		@Override
 		protected Long doInBackground(URL... params) {
 			String url = "http://countdown.api.tfl.gov.uk/interfaces/ura/instant_V1?LineName="+busNumber+"&ReturnList=DestinationText";
-			item = gerUrl.getJSONFromUrl(url);
+			//item = gerUrl.getJSONFromUrl(url);
 			return null;
 		}
 	 }

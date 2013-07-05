@@ -98,7 +98,7 @@ public class BusStopList extends ListActivity {
 			String []busAndDirection = busNumber.split(",");
 			String url ="http://countdown.api.tfl.gov.uk/interfaces/ura/instant_V1?LineName="+busAndDirection[1]+",DestinationText="+busAndDirection[0].replace(" ", "")+"&ReturnList=StopPointName";
 			Log.d(TAG,url);
-			item = gerUrl.getJSONFromUrl(url);
+			//item = gerUrl.getJSONFromUrl(url);
 			return null;
 		}
 	 }
