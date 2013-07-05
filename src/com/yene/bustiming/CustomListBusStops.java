@@ -39,25 +39,26 @@ public class CustomListBusStops extends BaseAdapter {
         if (convertView == null) {
             convertView = layoutInflater.inflate(R.layout.select_direction, null);
             holder = new ViewHolder();
-            holder.headlineView = (TextView) convertView.findViewById(R.id.stopName);
-            holder.reporterNameView = (TextView) convertView.findViewById(R.id.busNumber);
-            holder.reportedDateView = (TextView) convertView.findViewById(R.id.toward);
+            holder.stopName = (TextView) convertView.findViewById(R.id.stopName);
+            holder.busNumber = (TextView) convertView.findViewById(R.id.busNumber);
+            holder.toward = (TextView) convertView.findViewById(R.id.toward);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
         
-        holder.headlineView.setText(""+busStopList.get(position).getstopName());
-        holder.reporterNameView.setText(busStopList.get(position).getbusNumber());
-        holder.reportedDateView.setText(busStopList.get(position).getTowards());
+        
+        holder.stopName.setText(""+busStopList.get(position).getstopName());
+        holder.busNumber.setText(busStopList.get(position).getbusNumber());
+        holder.toward.setText(busStopList.get(position).getTowards());
  
         return convertView;
     }
  
     public class ViewHolder {
-        TextView headlineView;
-        TextView reporterNameView;
-        TextView reportedDateView;
+        TextView stopName;
+        TextView busNumber;
+        TextView toward;
     }
  
 }

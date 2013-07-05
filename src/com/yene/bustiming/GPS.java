@@ -53,7 +53,7 @@ public class GPS {
 		 };
 		 
 		// Register the listener with the Location Manager to receive location updates
-		 locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
+		 locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 5000, 100, locationListener);
 	 }
 	 
 	protected void makeUseOfNewLocation(Location location) {

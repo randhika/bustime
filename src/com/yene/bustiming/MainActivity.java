@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -50,10 +51,18 @@ public class MainActivity extends ListActivity {
 		getMenuInflater().inflate(R.menu.activity_main, menu);
 		return true;
 	}
-	public void sendMessage (View view){
+	
+	protected void onListItemClick(ListView l, View v, int position, long id) {
+		super.onListItemClick(l, v, position, id);
+		Toast.makeText(getBaseContext(), "position:"+JSONParser.getCollectionBusID().toString(), Toast.LENGTH_LONG).show();
+		sendMessage(JSONParser.getCollectionBusID().get(position));
+		
+	}
+		
+	public void sendMessage (String search_term){
 		Intent intent = new Intent(this, BusStop.class);
-	    EditText editText = (EditText) findViewById(R.id.busN);
-	    String search_term = editText.getText().toString();
+	    //EditText editText = (EditText) findViewById(R.id.busN);
+	    //String search_term = editText.getText().toString();
 	    if(search_term.length()<1 || search_term.length()>5 && isConnected ){
 			CharSequence text = "Please Enter Bus Number";
 			int duration = Toast.LENGTH_SHORT;

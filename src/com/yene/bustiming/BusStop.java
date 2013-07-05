@@ -5,6 +5,7 @@ import java.net.URL;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 
 import java.util.Locale;
@@ -25,7 +26,7 @@ import com.yene.example.bustiming.R;
 public class BusStop extends ListActivity {
 	 public final static String BUS_MESSAGE = "com.yene.BUSNUMBER";
 	 public static final String BUS_DIRECTION = "com.yene.BUSDIRECTION";
-     public JSONParser  gerUrl = new JSONParser();
+     public SingelBusStop  gerUrl = new SingelBusStop();
      ArrayList<String> item = new ArrayList<String>();
      String busStopID;
 	@Override
@@ -67,6 +68,41 @@ public class BusStop extends ListActivity {
 	 	startActivity(intent);
 	}
 	
+
+	private String convertDate( Long str )
+	{
+		
+		Date countDown = new Date(str);
+		Date currentTime = new Date();
+		
+		SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss", Locale.ENGLISH);
+		String dateStop = DATE_FORMAT.format(countDown);
+		String  dateStart = DATE_FORMAT.format(currentTime);
+		//HH converts hour in 24 hours format (0-23), day calculation
+		SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss",Locale.ENGLISH);
+ 
+		Date d1 = null;
+		Date d2 = null;
+		Long diffMinutes =null;
+		try {
+			d1 = format.parse(dateStart);
+			d2 = format.parse(dateStop);
+ 
+			//in milliseconds
+			long diff = d2.getTime() - d1.getTime();
+			 	 diffMinutes = diff / (60 * 1000) % 60;
+ 
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		if(diffMinutes == 0){
+			return "0";
+		}
+ 
+		return ""+diffMinutes;
+	}
+	
 	private class DownloadFilesTask extends AsyncTask<URL, Integer, Long> {
 		
 		private static final String TAG = "DownloadFilesTask";
@@ -74,67 +110,22 @@ public class BusStop extends ListActivity {
 		protected void onProgressUpdate(Integer... progress) {
 	         //setProgressPercent(progress[0]);
 	     }
-		
-		
-		private String convertDate( Long str )
-		{
-			
-			Date countDown = new Date(str);
-			Date currentTime = new Date();
-			
-			SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss", Locale.ENGLISH);
-			String dateStop = DATE_FORMAT.format(countDown);
-			String  dateStart = DATE_FORMAT.format(currentTime);
-			//HH converts hour in 24 hours format (0-23), day calculation
-			SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss",Locale.ENGLISH);
-	 
-			Date d1 = null;
-			Date d2 = null;
-			Long diffMinutes =null;
-			try {
-				d1 = format.parse(dateStart);
-				d2 = format.parse(dateStop);
-	 
-				//in milliseconds
-				long diff = d2.getTime() - d1.getTime();
-				 	 diffMinutes = diff / (60 * 1000) % 60;
-	 
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			
-			if(diffMinutes == 0){
-				return "Due";
-			}
-	 
-			return ""+diffMinutes +"(min)  ";
-			 
-		
-			 
-		}
-
 	     protected void onPostExecute(Long result) {
 	    	
 	    	item.remove(0);
 	    	ArrayList<BusStopObject> timeArrivle = new  ArrayList<BusStopObject>();
 	    	
 	    	 for(int index = 0 ; index < item.size(); index++){
-	    		 BusStopObject busStopObj = new BusStopObject();
-	    		 Log.d(TAG+"Before spilt", item.get(index));
 	    		 String []busDirection= item.get(index).split(",",0);
-	    		 Log.d(TAG+"last element", busDirection[3]);
-	    		 //convertDate( Long.parseLong(arrivTime, 10));
-	    		 
-	    		 busStopObj.setstopName(busDirection[1].replace("\"", ""));
-	 	         busStopObj.setbusNumber(busDirection[2].replace("\"", ""));
-	 	         
-	 	         String arrivTime = busDirection[3].replace("]", "");
-	 	         busStopObj.setcountDown(convertDate( Long.parseLong(arrivTime, 10)));
-	    		 Log.d(TAG,arrivTime);
+	    		 String arrivTime = busDirection[3].replace("]", "");
+	    		 BusStopObject busStopObj = new BusStopObject(convertDate( Long.parseLong(arrivTime, 10)));	    		
+	    		 busStopObj.setTowards(busDirection[1].replace("\"", ""));
+	 	         busStopObj.setbusNumber(busDirection[2].replace("\"", ""));	 	      
+	 	        
 	    		 timeArrivle.add(busStopObj);
 	    	 }
-	    	   
-			    setListAdapter(new CustomListAdapter(BusStop.this, timeArrivle));
+	    	 Collections.sort(timeArrivle);  
+			 setListAdapter(new CustomListAdapter(BusStop.this, timeArrivle));
 			 
 	     }
 
@@ -142,7 +133,7 @@ public class BusStop extends ListActivity {
 		protected Long doInBackground(URL... params) {
 			
 			String url = "http://countdown.api.tfl.gov.uk/interfaces/ura/instant_V1?StopCode1="+busStopID;
-			//item = gerUrl.getJSONFromUrl(url);
+			item = gerUrl.getJSONFromUrl(url);
 			//ConnectionDetector cd;
 			//cd = new ConnectionDetector(BusStop.this);
 			//cd.showAlertDialog(BusStop.this, "Number of Bus At this Bus Stop", ""+item.size(), false);
@@ -150,4 +141,6 @@ public class BusStop extends ListActivity {
 		}
 	
 	}
+	
+
 } 

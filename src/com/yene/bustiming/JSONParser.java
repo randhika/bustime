@@ -24,6 +24,7 @@ public class JSONParser {
 	static InputStream is = null;
     static JSONObject jObj = null;
     ArrayList<BusStopObject> collectionBusStop = new  ArrayList<BusStopObject>();
+    static ArrayList<String> collectionBusID = new  ArrayList<String>();
     // constructor
     public JSONParser() {
     	 Log.d(TAG,"Get data from web has strated");
@@ -53,32 +54,26 @@ public class JSONParser {
             BufferedReader reader = new BufferedReader(new InputStreamReader(is, "iso-8859-1"), 8);
             StringBuilder sb = new StringBuilder();
             
-            String line,urlForBusNumber, busNumber = null;
-            
+            String line,urlForBusNumber, busNumbers = null;
+            collectionBusID.clear();
             while ((line = reader.readLine()) != null) {
-            	BusStopObject busStopObject = new BusStopObject();
+            	BusStopObject busStopObject = new BusStopObject("");
 	            String []split = line.split(",");
 	            if(split.length>3){
-		           String busStopID = split[2];
-		            //Log.d(TAG,line+": first request 1");
+	            	String busStopID = split[2];
 		            //Log.d(TAG,busStopID);
-		           
 		            String stopID = busStopID.replace("\"", "");
-		            
+		            collectionBusID.add(stopID);
 		            urlForBusNumber = "http://countdown.api.tfl.gov.uk/interfaces/ura/instant_V1?StopCode1="+stopID+"&ReturnList=lineId";
-		            Log.d(TAG,stopID);  
-		            busNumber = getListOfBusStop(urlForBusNumber);
+		           		            busNumbers = getListOfBusNumbers(urlForBusNumber);
 		            String busStop,toward;
 		            busStop = split[3].replace("\"", "");
 		            toward = split[1].replace("\"", "");
 		            busStopObject.setstopName(busStop);
 		            busStopObject.setTowards(toward);
-		            busStopObject.setbusNumber(busNumber);
-		            if(busNumber.length()>1){
+		            busStopObject.setbusNumber(busNumbers);
 		            collectionBusStop.add(busStopObject);
-		            }
-		            //Log.d(TAG,stopID);
-		            //Log.d(TAG,busNumber+"busNumber");
+		          
 	            }
             }
             is.close();
@@ -90,7 +85,11 @@ public class JSONParser {
         return collectionBusStop;
  
     }
-    public String getListOfBusStop(String url) {
+    public static ArrayList<String> getCollectionBusID() {
+		return collectionBusID;
+	}
+
+	public String getListOfBusNumbers(String url) {
     	 ArrayList<String> collectionBusNumber = new ArrayList<String>();
         // Making HTTP request
     	 String listOfbus;
@@ -98,11 +97,9 @@ public class JSONParser {
             // defaultHttpClient
             DefaultHttpClient httpClient = new DefaultHttpClient();
             HttpPost httpPost = new HttpPost(url);
- 
             HttpResponse httpResponse = httpClient.execute(httpPost);
             HttpEntity httpEntity = httpResponse.getEntity();
-            is = httpEntity.getContent();          
- 
+            is = httpEntity.getContent(); 
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         } catch (ClientProtocolException e) {
@@ -110,34 +107,25 @@ public class JSONParser {
         } catch (IOException e) {
             e.printStackTrace();
         }
-         
         try {
             BufferedReader reader = new BufferedReader(new InputStreamReader(is, "iso-8859-1"), 8);
             StringBuilder sb = new StringBuilder();
-           
             String line = null;
             while ((line = reader.readLine()) != null) {
-            	Log.d(TAG,line+": request 2");
 	            String []split = line.split(",");
-	            listOfbus = split[1];
-	            String eachBus = listOfbus.replace("\"", "").replace("]", "");
-	            collectionBusNumber.add(eachBus);
-	            sb.append(eachBus);
-	            //Log.d(TAG,listOfbus+":request 3");
-	            //Log.d(TAG,line+"line");
+	            if(split.length<3){
+		            listOfbus = split[1];
+		            String eachBus = listOfbus.replace("\"", "").replace("]", "");
+		            collectionBusNumber.add(eachBus);
+		            sb.append(eachBus);
+	            }
             }
-            //Log.d(TAG,sb.toString()+"busNumber");
             is.close();
-            
         } catch (Exception e) {
             Log.e("Buffer Error", "Error converting result " + e.toString());
         }
-        // return JSON String
-        collectionBusNumber.remove(0);
         return removeDuplicate(collectionBusNumber);
- 
     }
-    
     public  String removeDuplicate(ArrayList<String> arlList)
     {
     	StringBuilder sb = new StringBuilder();

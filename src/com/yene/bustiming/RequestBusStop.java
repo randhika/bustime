@@ -2,18 +2,10 @@ package com.yene.bustiming;
 
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.LinkedHashSet;
-import java.util.Set;
-
 import android.os.AsyncTask;
 import android.util.Log;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
-
-import com.yene.example.bustiming.R;
-
 public class RequestBusStop extends AsyncTask<URL, Integer, Long> {
-	private ArrayList<BusStopObject> item = new ArrayList<BusStopObject>();
+	private ArrayList<BusStopObject> busStopObjects= new ArrayList<BusStopObject>();
 	public JSONParser  gerUrl = new JSONParser();
 	public MainActivity mainActivity; 
     private static final String TAG = "DownloadFilesTaskCalled";
@@ -28,16 +20,15 @@ public class RequestBusStop extends AsyncTask<URL, Integer, Long> {
     }
 
     protected void onPostExecute(Long result) {
-   	
-   	 item.remove(0);
-   	 mainActivity.setListAdapter(new CustomListBusStops(mainActivity, item));
-    }
+   	   	
+   	 	mainActivity.setListAdapter(new CustomListBusStops(mainActivity, busStopObjects));
+   	}
 
 	@Override
 	protected Long doInBackground(URL... params) {
 		Log.d(TAG,"lat: "+lat+":::lng: "+lng);
-		String url = "http://countdown.api.tfl.gov.uk/interfaces/ura/instant_V1?Circle="+lat+","+lng+",250&ReturnList=StopCode1,StopPointName,StopPointIndicator,Towards";
-		item = gerUrl.getJSONFromUrl(url);
+		String url = "http://countdown.api.tfl.gov.uk/interfaces/ura/instant_V1?Circle="+lat+","+lng+",200&ReturnList=StopCode1,StopPointName,StopPointIndicator,Towards";
+		busStopObjects = gerUrl.getJSONFromUrl(url);
 		return null;
 	}
 }

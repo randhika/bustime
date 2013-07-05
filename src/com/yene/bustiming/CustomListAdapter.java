@@ -42,7 +42,7 @@ public class CustomListAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder holder;
         if (convertView == null) {
-            convertView = layoutInflater.inflate(R.layout.select_direction, null);
+            convertView = layoutInflater.inflate(R.layout.singel_stop, null);
             holder = new ViewHolder();
             holder.headlineView = (TextView) convertView.findViewById(R.id.stopName);
             holder.reporterNameView = (TextView) convertView.findViewById(R.id.busNumber);
@@ -52,9 +52,9 @@ public class CustomListAdapter extends BaseAdapter {
             holder = (ViewHolder) convertView.getTag();
         }
         
-       // holder.headlineView.setText(""+listData.get(position).getstopName());
-        //holder.reporterNameView.setText(listData.get(position).getbusNumber());
-        //holder.reportedDateView.setText(listData.get(position).getTowards());
+        holder.headlineView.setText(""+listData.get(position).getTowards());
+        holder.reporterNameView.setText(listData.get(position).getbusNumber());
+        holder.reportedDateView.setText(listData.get(position).getcountDown());
  
         return convertView;
     }

@@ -1,12 +1,17 @@
 package com.yene.bustiming;
 
-public class BusStopObject {
+public class BusStopObject  implements Comparable<BusStopObject>{
 
 	    private String busNumber;
 	    private String countDown;
 	    private String stopName;
 	    private String towards;
 	    private String lineID;
+	    
+	    public BusStopObject(String countDown){
+	    	
+	    	this.countDown=countDown;
+	    }
 	    
 	    public String getLineID() {
 			return lineID;
@@ -53,6 +58,13 @@ public class BusStopObject {
 	        return "[ busNumber=" + busNumber + ", reporter Name=" + 
 	                countDown + " , stopName=" + stopName + "]";
 	    }
+
+		@Override
+		public int compareTo(BusStopObject another) {
+			int countDown = Integer.parseInt(another.getcountDown());
+			int thisCount = Integer.parseInt(this.countDown);
+			return thisCount-countDown;
+		}
 
 
 }
