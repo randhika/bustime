@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.yene.example.bustiming.R;
@@ -42,6 +43,7 @@ public class CustomListBusStops extends BaseAdapter {
             holder.stopName = (TextView) convertView.findViewById(R.id.stopName);
             holder.busNumber = (TextView) convertView.findViewById(R.id.busNumber);
             holder.toward = (TextView) convertView.findViewById(R.id.toward);
+            holder.addFavourit = (Button) convertView.findViewById(R.id.button1);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
@@ -59,6 +61,7 @@ public class CustomListBusStops extends BaseAdapter {
         TextView stopName;
         TextView busNumber;
         TextView toward;
+        Button addFavourit;
     }
  
 }

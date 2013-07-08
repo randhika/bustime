@@ -55,8 +55,10 @@ public class BusStopObject  implements Comparable<BusStopObject>{
 		 
 	    @Override
 	    public String toString() {
-	        return "[ busNumber=" + busNumber + ", reporter Name=" + 
-	                countDown + " , stopName=" + stopName + "]";
+	        return "[ busNumber=" + busNumber + " , countDown=" + 
+	                countDown + " , stopName=" + stopName +
+	                " , towards ="+towards+
+	                "]";
 	    }
 
 		@Override

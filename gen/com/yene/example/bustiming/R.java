@@ -31,9 +31,10 @@ public final class R {
         public static final int linearLayout3=0x7f070008;
         public static final int listView1=0x7f07000a;
         public static final int map=0x7f07000c;
-        public static final int menu_settings=0x7f070012;
         public static final int min=0x7f070011;
         public static final int myTitle=0x7f07000b;
+        public static final int reload=0x7f070013;
+        public static final int save_stop=0x7f070012;
         public static final int stopName=0x7f07000e;
         public static final int toward=0x7f07000d;
     }
@@ -47,17 +48,22 @@ public final class R {
     }
     public static final class menu {
         public static final int activity_main=0x7f060000;
+        public static final int reload=0x7f060001;
     }
     public static final class string {
+        public static final int add_button_text=0x7f040006;
         public static final int app_name=0x7f040000;
         public static final int menu_settings=0x7f040001;
-        public static final int near_by_stop=0x7f040008;
-        public static final int search_button_text=0x7f040003;
-        public static final int search_hint=0x7f040004;
-        public static final int search_title=0x7f040002;
-        public static final int select_bus_name=0x7f040007;
-        public static final int select_bus_stop=0x7f040006;
-        public static final int select_direction=0x7f040005;
+        public static final int near_by_stop=0x7f04000c;
+        public static final int refresh=0x7f040003;
+        public static final int save_bus_stop=0x7f040002;
+        public static final int search_button_text=0x7f040005;
+        public static final int search_hint=0x7f040008;
+        public static final int search_title=0x7f040004;
+        public static final int select_bus_name=0x7f04000b;
+        public static final int select_bus_stop=0x7f04000a;
+        public static final int select_direction=0x7f040009;
+        public static final int view_button_text=0x7f040007;
     }
     public static final class style {
         /** 

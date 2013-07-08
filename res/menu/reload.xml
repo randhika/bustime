@@ -1,9 +1,8 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
-
-    <item
-        android:id="@+id/save_stop"
+      <item
+        android:id="@+id/reload"
         android:orderInCategory="100"
-        android:title="@string/save_bus_stop"
+        android:title="@string/refresh"
         android:showAsAction="ifRoom|withText"
         />
 </menu>

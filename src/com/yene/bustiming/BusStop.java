@@ -18,21 +18,27 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
 import com.yene.example.bustiming.R;
 
+
 public class BusStop extends ListActivity {
 	 public final static String BUS_MESSAGE = "com.yene.BUSNUMBER";
 	 public static final String BUS_DIRECTION = "com.yene.BUSDIRECTION";
      public SingelBusStop  gerUrl = new SingelBusStop();
+     
      ArrayList<String> item = new ArrayList<String>();
-     String busStopID;
+     String busStopID,busStopName,direction;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		//setContentView(R.layout.select_direction);
+		DatabaseHandler db = new DatabaseHandler(this);
+		db.addFavouritStop( new MyBusStopObject("ID","here","now"));
+		db.getLastContact();
 		Context context = getApplicationContext();
 		Intent intent = getIntent();
 		int duration = Toast.LENGTH_SHORT;
@@ -47,6 +53,19 @@ public class BusStop extends ListActivity {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.activity_main, menu);
 		return true;
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+	    switch (item.getItemId()) {
+	        case R.id.save_stop:
+	        	 Toast.makeText(this,"selected=" +busStopID, Toast.LENGTH_LONG).show();
+	        	// db.addFavouritStop( new MyBusStopObject(busStopID,busStopName,"now"));
+	        	 //Toast.makeText(this,"selected=" + db.getLastContact(), Toast.LENGTH_LONG).show();
+	            return true;
+	        default:
+	            return super.onOptionsItemSelected(item);
+	    }
 	}
 	protected void onListItemClick(CustomListAdapter l, View v, int position, long id) {
 	    String item = (String) getListAdapter().getItem(position);
@@ -118,7 +137,8 @@ public class BusStop extends ListActivity {
 	    	 for(int index = 0 ; index < item.size(); index++){
 	    		 String []busDirection= item.get(index).split(",",0);
 	    		 String arrivTime = busDirection[3].replace("]", "");
-	    		 BusStopObject busStopObj = new BusStopObject(convertDate( Long.parseLong(arrivTime, 10)));	    		
+	    		 BusStopObject busStopObj = new BusStopObject(convertDate( Long.parseLong(arrivTime, 10)));	  
+	    		 busStopName = busDirection[1].replace("\"", "");
 	    		 busStopObj.setTowards(busDirection[1].replace("\"", ""));
 	 	         busStopObj.setbusNumber(busDirection[2].replace("\"", ""));	 	      
 	 	        

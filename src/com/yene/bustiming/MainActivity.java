@@ -8,9 +8,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,26 +23,18 @@ public class MainActivity extends ListActivity {
 	 private GPS gps;
 	 private Context context;
 	 private ConnectionDetector cd;
-	 private static TextView latituteField;
-	 private static TextView longitudeField;
 	 private RequestBusStop downloadfile;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		context = getApplicationContext();
 		super.onCreate(savedInstanceState);
-		//setContentView(R.layout.activity_main);
 		cd = new ConnectionDetector(context);
-		//latituteField = (TextView) findViewById(R.id.TextView02);
-	    //longitudeField = (TextView) findViewById(R.id.TextView04);
 		gps = new GPS(MainActivity.this);
-		//Toast.makeText(this, "gps.getLatituteField() " + gps.getLatituteField(),Toast.LENGTH_SHORT).show();
 		isConnected = cd.isConnectingToInternet();
 		
 	}
 	public void getGpsCoor(String lat , String lng){
-		//latituteField.setText(lat);
-		//longitudeField.setText(lng);
 		Log.d(TAG,"mainactivity");
 		downloadfile = new RequestBusStop(this,lat,lng);
 		downloadfile.execute();
@@ -48,15 +42,26 @@ public class MainActivity extends ListActivity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.activity_main, menu);
+		getMenuInflater().inflate(R.menu.reload, menu);
 		return true;
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+	    switch (item.getItemId()) {
+	        case R.id.reload:
+	        	 Toast.makeText(this,"selected=", Toast.LENGTH_LONG).show();
+	        	 getGpsCoor(gps.getLatituteField(),gps.getLongitudeField());
+	            return true;
+	        default:
+	            return super.onOptionsItemSelected(item);
+	    }
 	}
 	
 	protected void onListItemClick(ListView l, View v, int position, long id) {
 		super.onListItemClick(l, v, position, id);
 		Toast.makeText(getBaseContext(), "position:"+JSONParser.getCollectionBusID().toString(), Toast.LENGTH_LONG).show();
 		sendMessage(JSONParser.getCollectionBusID().get(position));
-		
 	}
 		
 	public void sendMessage (String search_term){
@@ -74,5 +79,12 @@ public class MainActivity extends ListActivity {
 	    	 intent.putExtra(BUS_NO_MESSAGE, search_term);
 	 	    startActivity(intent);
 	    }
+	}
+	
+	public void addFavourit (View v){
+		
+		 final int position = getListView().getPositionForView((RelativeLayout)v.getParent());
+		 Toast.makeText(getBaseContext(), position+ "= position:"+JSONParser.getCollectionBusID().toString(), Toast.LENGTH_LONG).show();
+		 sendMessage(JSONParser.getCollectionBusID().get(position));
 	}
 }

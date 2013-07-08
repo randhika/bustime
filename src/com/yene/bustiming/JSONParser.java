@@ -58,8 +58,9 @@ public class JSONParser {
             collectionBusID.clear();
             while ((line = reader.readLine()) != null) {
             	BusStopObject busStopObject = new BusStopObject("");
+            	Log.d(TAG,line);
 	            String []split = line.split(",");
-	            if(split.length>3){
+	            if(split.length>3 && split[3] != null && split.length < 6 ){
 	            	String busStopID = split[2];
 		            //Log.d(TAG,busStopID);
 		            String stopID = busStopID.replace("\"", "");
