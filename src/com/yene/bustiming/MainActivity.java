@@ -1,5 +1,7 @@
 package com.yene.bustiming;
 
+import java.io.InputStream;
+
 import com.yene.example.bustiming.R;
 import android.os.Bundle;
 import android.app.Activity;
@@ -30,14 +32,20 @@ public class MainActivity extends ListActivity {
 		context = getApplicationContext();
 		super.onCreate(savedInstanceState);
 		cd = new ConnectionDetector(context);
-		gps = new GPS(MainActivity.this);
-		isConnected = cd.isConnectingToInternet();
+		//gps = new GPS(MainActivity.this);
+		//isConnected = cd.isConnectingToInternet();
 		
+		//downloadfile = new RequestBusStop(this,"51.5259807","-0.1055831");
+		//downloadfile.execute();
+		BufferedReaderExample bf= new BufferedReaderExample();
+		InputStream is = this.getResources().openRawResource(R.drawable.bus);
+		bf.readName("",is);
+		setListAdapter(new CustomListBusStops(this, bf.eachStop()));
 	}
 	public void getGpsCoor(String lat , String lng){
 		Log.d(TAG,"mainactivity");
-		downloadfile = new RequestBusStop(this,lat,lng);
-		downloadfile.execute();
+//		downloadfile = new RequestBusStop(this,lat,lng);
+//		downloadfile.execute();
 	}
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {

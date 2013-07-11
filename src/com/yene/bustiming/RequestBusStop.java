@@ -20,7 +20,7 @@ public class RequestBusStop extends AsyncTask<URL, Integer, Long> {
     }
 
     protected void onPostExecute(Long result) {
-   	 	mainActivity.setListAdapter(new CustomListBusStops(mainActivity, busStopObjects));
+   	 	//mainActivity.setListAdapter(new CustomListBusStops(mainActivity, busStopObjects));
    	}
 
 	@Override

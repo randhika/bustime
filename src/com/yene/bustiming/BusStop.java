@@ -29,20 +29,20 @@ public class BusStop extends ListActivity {
 	 public final static String BUS_MESSAGE = "com.yene.BUSNUMBER";
 	 public static final String BUS_DIRECTION = "com.yene.BUSDIRECTION";
      public SingelBusStop  gerUrl = new SingelBusStop();
-     
+     DatabaseHandler db ;
      ArrayList<String> item = new ArrayList<String>();
      String busStopID,busStopName,direction;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		//setContentView(R.layout.select_direction);
-		DatabaseHandler db = new DatabaseHandler(this);
-		db.addFavouritStop( new MyBusStopObject("ID","here","now"));
-		db.getLastContact();
+		db = new DatabaseHandler(this);
+		//db.getLastContact();
 		Context context = getApplicationContext();
 		Intent intent = getIntent();
 		int duration = Toast.LENGTH_SHORT;
 		busStopID = intent.getStringExtra(MainActivity.BUS_NO_MESSAGE);
+		
 		Toast toast = Toast.makeText(context, busStopID, duration);
 		toast.show();
 		new DownloadFilesTask().execute();
@@ -62,6 +62,7 @@ public class BusStop extends ListActivity {
 	        	 Toast.makeText(this,"selected=" +busStopID, Toast.LENGTH_LONG).show();
 	        	// db.addFavouritStop( new MyBusStopObject(busStopID,busStopName,"now"));
 	        	 //Toast.makeText(this,"selected=" + db.getLastContact(), Toast.LENGTH_LONG).show();
+	        	 db.addFavouritStop( new MyBusStopObject(busStopID,BUS_DIRECTION));
 	            return true;
 	        default:
 	            return super.onOptionsItemSelected(item);
@@ -70,6 +71,7 @@ public class BusStop extends ListActivity {
 	protected void onListItemClick(CustomListAdapter l, View v, int position, long id) {
 	    String item = (String) getListAdapter().getItem(position);
 	    Toast.makeText(this, item + " selected", Toast.LENGTH_LONG).show();
+	    //db.addFavouritStop( new MyBusStopObject(BUS_MESSAGE,BUS_DIRECTION));
 	    //openBusStopList(item,busNumber);
 	  }
 	

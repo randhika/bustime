@@ -1,14 +1,19 @@
 package com.yene.bustiming;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+
 public class MyBusStopObject {
 	
-	String id,direction,toward,time;
-	public MyBusStopObject (String id, String direction, String toward ){
+	String id,direction,time;
+	public MyBusStopObject (String id, String direction ){
 		
 		this.id=id;
 		this.direction = direction;
-		this.toward= toward;
 		
+		this.time = getTime();
 		
 	}
 	public String getId() {
@@ -23,14 +28,12 @@ public class MyBusStopObject {
 	public void setDirection(String direction) {
 		this.direction = direction;
 	}
-	public String getToward() {
-		return toward;
-	}
-	public void setToward(String toward) {
-		this.toward = toward;
-	}
+	
 	public String getTime() {
-		return time;
+		DateFormat  dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+	 	//get current date time with Date()
+	 	Date date = new Date();
+		return  dateFormat.format(date);
 	}
 	public void setTime(String time) {
 		this.time = time;

@@ -15,10 +15,10 @@ import com.yene.example.bustiming.R;
 public class CustomListBusStops extends BaseAdapter {
 	 
     private static final String TAG = "CUSTOMLISTADAPTER";
-	private ArrayList<BusStopObject> busStopList;
+	private ArrayList<BusStopFile> busStopList;
     private LayoutInflater layoutInflater;
  
-    public CustomListBusStops(Context context, ArrayList<BusStopObject> busStopList) {
+    public CustomListBusStops(Context context, ArrayList<BusStopFile> busStopList) {
         this.busStopList = busStopList;
         layoutInflater = LayoutInflater.from(context);
     }
@@ -50,9 +50,9 @@ public class CustomListBusStops extends BaseAdapter {
         }
         
         
-        holder.stopName.setText(""+busStopList.get(position).getstopName());
-        holder.busNumber.setText(busStopList.get(position).getbusNumber());
-        holder.toward.setText(busStopList.get(position).getTowards());
+        holder.stopName.setText(""+busStopList.get(position).getStopName());
+        holder.busNumber.setText(busStopList.get(position).bus);
+        holder.toward.setText(busStopList.get(position).getStopId());
  
         return convertView;
     }

@@ -26,7 +26,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
   
  
     // logManager Table Columns names
-    private static final String KEY_ID = "id";   
+    private static final String KEY_ID = "id"; 
+    private static final String KEY_BUS_STOP_ID="stopId";
     private static final String KEY_MSG="direction";
     private static final String KEY_TIME="time";
 
@@ -44,8 +45,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     	
     	 Log.d(TAG,"Table Created...");
         String CREATE_CONTACTS_TABLE = "CREATE TABLE " + TABLE_LOGS + "("
-                + KEY_ID + " INTEGER PRIMARY KEY," 
-                + KEY_MSG + "TEXT,"
+                + KEY_ID + " INTEGER PRIMARY KEY, "
+                + KEY_BUS_STOP_ID + " TEXT, "
+                + KEY_MSG + " TEXT, "
         		+ KEY_TIME +" TEXT "+")";
         db.execSQL(CREATE_CONTACTS_TABLE);
         
@@ -69,11 +71,11 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     // Adding new contact
     void addFavouritStop(MyBusStopObject mystop) {
         SQLiteDatabase db = this.getWritableDatabase();
- 
+        
         ContentValues values = new ContentValues();
-       
-        values.put(KEY_MSG, "Here"); // Contact Type
-        values.put(KEY_TIME, "NOw");// time of contact
+        values.put(KEY_BUS_STOP_ID, mystop.getId());
+        values.put(KEY_MSG, mystop.getDirection()); // Contact Type
+        values.put(KEY_TIME, mystop.getTime());// time of contact
  
         // Inserting Row
         db.insert(TABLE_LOGS, null, values);
@@ -90,7 +92,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         if (cursor != null)
             cursor.moveToFirst();
  
-        MyBusStopObject contact = new MyBusStopObject(cursor.getString(0),cursor.getString(1), cursor.getString(2));
+        MyBusStopObject contact = new MyBusStopObject(cursor.getString(1),cursor.getString(2));
         // return contact
         return contact;
     }
@@ -110,7 +112,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     	return "Unable to get Logs Please try later.";
     }
  
-    // Getting All Contacts
+    // Getting All Favour Bus Stop
     public List<MyBusStopObject> getAllContacts() {
         List<MyBusStopObject> contactList = new ArrayList<MyBusStopObject>();
         // Select All Query
@@ -122,21 +124,16 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         // looping through all rows and adding to list
         if (cursor.moveToFirst()) {
             do {
-            	MyBusStopObject   myFavStop = new MyBusStopObject("", "", "");
+            	MyBusStopObject   myFavStop = new MyBusStopObject("", "");
             	myFavStop.setId(cursor.getString(0));
-            	
-                
                 // Adding contact to list
                 contactList.add(myFavStop);
             } while (cursor.moveToNext());
         }
- 
         // return contact list
         db.close();
         return contactList;
     }
-    
- 
     // Updating single contact
     public int updateContact(MyBusStopObject myStop) {
         SQLiteDatabase db = this.getWritableDatabase();
