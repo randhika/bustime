@@ -12,48 +12,40 @@ import android.widget.TextView;
 
 
 public class GPS {
-	
 	private static final String TAG = "GPS";
 	private LocationManager locationManager;
 	private String latituteField,longitudeField;
-	private MainActivity mainactivity;
-	 
-	 public GPS(final MainActivity mainactivity){
-		 this.mainactivity = mainactivity;
-		 
+	public GPS(final MainActivity mainactivity){
+		 Log.d(TAG, "GPS Started.");
 		// Acquire a reference to the system Location Manager
 		 locationManager = (LocationManager) mainactivity.getSystemService(Context.LOCATION_SERVICE);
 		// Define a listener that responds to location updates
 		 LocationListener locationListener = new LocationListener() {
 		     public void onLocationChanged(Location location) {
 		       // Called when a new location is found by the network location provider.
-		    	
+		    	 Log.d(TAG, "Called when a new location is found by the network location provider.");
 		       makeUseOfNewLocation(location);
-		       mainactivity.getGpsCoor(getLatituteField(),getLongitudeField());
-				
+		      // mainactivity.getGpsCoor(getLatituteField(),getLongitudeField());
 		     }
 
 			@Override
 			public void onProviderDisabled(String arg0) {
 				// TODO Auto-generated method stub
-				
 			}
 
 			@Override
 			public void onProviderEnabled(String arg0) {
 				// TODO Auto-generated method stub
-				
 			}
 
 			@Override
 			public void onStatusChanged(String arg0, int arg1, Bundle arg2) {
 				// TODO Auto-generated method stub
-				
 			}
 		 };
 		 
 		// Register the listener with the Location Manager to receive location updates
-		 locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 5000, 100, locationListener);
+		 locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 0, locationListener);
 	 }
 	 
 	protected void makeUseOfNewLocation(Location location) {

@@ -7,24 +7,22 @@ import java.io.InputStreamReader;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
+
+
 
  
 public class BufferedReaderExample  {	
 	ArrayList <BusStopFile> busCollection = new ArrayList<BusStopFile>();
-	ArrayList <BusStopFile> badBusCollection = new ArrayList<BusStopFile>();
-	ArrayList <BusStopFile> eachBusStop = new ArrayList<BusStopFile>();
+	ArrayList <BusStopFile> nearby = new ArrayList<BusStopFile>();
 	static int count =0;
-	
 	BufferedReaderExample() {
 	      System.out.println("-------------------: ");
-	      System.out.println("Object Start: ");
+	      System.out.println("Object BufferedReaderExample: ");
 	   }
 	
 	public ArrayList<BusStopFile> eachStop(){
 		
-		return eachBusStop;
+		return nearby;
 	}
 	
 
@@ -58,108 +56,72 @@ public class BufferedReaderExample  {
 	    // only got here if we didn't return false
 	    return true;
 	}
-	public  void readName(String fileName, InputStream  in){
+	public  void readName(InputStream  in){
 		BufferedReader br;
-		
+		System.out.println("-------------------: ");
+	    System.out.println("Object InputStream: ");
 		
 		try {
-			
 			br = new BufferedReader(new InputStreamReader(in));
 			String sCurrentLine;
 			while ((sCurrentLine = br.readLine()) != null) {
-				String Id,stopname,lat,lng,bus;
-				String [] location;
-				String []name = sCurrentLine.split("\"");
-				if(name.length>5){
-				//System.out.print(name[5]+" : "+name[3]+" : "+name[1]+"\n");
-				}
-				if(name.length<8 && isInteger(name[1]) && name[4].length()>4){
-					location = name[4].split(",");
-					Id= name[1];
-					stopname = name[3];
-					lat = location[1];
-					lng = location[2];
-					bus = name[5];
-					busCollection.add(new BusStopFile( Id, stopname,lat,lng,bus ));
-				}else{
-					Id= name[2].replace("\"", "");
-					stopname = name[1];
-					lat = name[3];
-					lng = name[4].replace("]", "");
-					bus = "";
-					
-					badBusCollection.add(new BusStopFile( Id, stopname,lat,lng,bus ));
+				String Id,stopname,lat,lng,bus,toward;
+				String []name = sCurrentLine.split(";");
+							
+					//printList(name);
+					if(name.length == 6 && isInteger(name[2])){
+						//printList(name);	
+						stopname 	= name[0];
+						toward 		= name[1];
+						Id 			= name[2];
+						lat 		= name[3];
+						lng 		= name[4];
+						bus 		= name[5];						
+						busCollection.add(new BusStopFile( Id, stopname,lat,lng,bus,toward ));
 				}
 				count++;
 			}
 			 System.out.println("Total list "+ count);	
 			 System.out.println("Total bus stop object "+ busCollection.size());	
-			 System.out.println("Total bus stop object "+ busCollection.get(10000).toString());	
-			 System.out.println("Total bus stop object "+ busCollection.get(10001).toString());		
+				
 		} catch (IOException e) {
 			e.printStackTrace();
 		} 
-		findBusStop((float) 51.51709899999999,(float) -0.146084);
+		//findBusStop((float) 51.51709899999999,(float) -0.146084);
 	}
 	
-	 public ArrayList <BusStopFile> removeDuplicate(ArrayList <BusStopFile> arlList){
-		 
-		System.out.print("\nNumber of near stop before: "+arlList.size());	
-		Set<BusStopFile> h = new HashSet<BusStopFile>(arlList);
-		arlList.clear();
-		System.out.print("\nNumber of near stop clean: "+arlList.size());	
-		System.out.print("\nNumber of near in H: "+h.size());	
-		arlList.addAll(h);
-		System.out.print("\nNumber of near stop After: "+arlList.size());	
-	   return arlList;
-	  }
-	 
-	 public void groupBusNumber(ArrayList <BusStopFile> busStop){
-		 String busNumber ="";
-		 for (int i= 0; i< busStop.size(); i++){
-			 int index = i;
-			
-			 index++;
-			 if(index < busStop.size()){
-			 	if(busStop.get(i).stopId.equals(busStop.get(index).stopId)) {
-			 		busNumber += "  "+busStop.get(i).bus;
-			 		
-			 		}else if(busNumber.length()<1){
-			 			eachBusStop.add(new BusStopFile( busStop.get(index).stopId, busStop.get(index).stopName,busStop.get(index).stopLat,busStop.get(index).stopLng, busStop.get(i).bus ));
-			 			busNumber = "";	
-			 		}else if(busNumber.length()>1){
-			 			eachBusStop.add(new BusStopFile( busStop.get(index).stopId, busStop.get(index).stopName,busStop.get(index).stopLat,busStop.get(index).stopLng, busNumber));
-			 			busNumber = "";	
-			 		}
-			 
-		 	}
-		 }
-			
-		 }
-	 
+	public void printList( String []name ){
+		
+		System.out.print("Lenght: "+ name.length+
+				"\n  0=: "+ name[0]+
+				"\n  1: "+ name[1]+
+				"\n  2: "+ name[2]+
+				"\n  3: "+ name[3]+
+				"\n  4: "+ name[4]+						
+				"\n  6: "+ name[5]+"\n");
+		
+	}
 	
-	public void findBusStop(double nearLat, double nearLng){
+	public ArrayList<BusStopFile> findBusStop(double nearLat, double nearLng){
 		System.out.println("-------------------: ");
+		System.out.println("lat = "+nearLat  +" lng = " +nearLng );
 		int counts = 0;
 		
-		removeDuplicate(busCollection);
-		Collections.sort(busCollection);
-		groupBusNumber(busCollection);
-		removeDuplicate(eachBusStop);
-		Collections.sort(eachBusStop);
-		for(BusStopFile item :eachBusStop ){
-			//System.out.print("\n\n["+item.toString()+"]");
-			double lat ,lng;
-			lat = Double.parseDouble(""+item.stopLat);
-			lng = Double.parseDouble(""+item.stopLng);
-			double d = distance(nearLat,nearLng,lat,lng);
+		for(BusStopFile item :busCollection ){
 			
+			double lat ,lng;
+			lat 		= Double.parseDouble(""+item.stopLat);
+			lng 		= Double.parseDouble(""+item.stopLng);
+			double d 	= distance(nearLat,nearLng,lat,lng);
+			//System.out.println("Distnace ="+d );
 			if(d < 0.5){
-				//System.out.print("\n\n["+item.toString()+"]");
+				System.out.print("\n\n["+item.toString()+"]");
+				nearby.add(item);
 				counts++;
 				}
 			}
-		System.out.print("\nNumber of near stop: "+counts);	
+		System.out.print("\nNumber of near stop: "+counts);
+		return nearby;	
 	}
 	
 }

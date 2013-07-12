@@ -3,6 +3,11 @@ package com.yene.bustiming;
 import java.io.InputStream;
 
 import com.yene.example.bustiming.R;
+
+import android.location.Criteria;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.app.Activity;
 import android.app.ListActivity;
@@ -12,40 +17,54 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.EditText;
+
 import android.widget.ListView;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
+
 import android.widget.Toast;
 
-public class MainActivity extends ListActivity {
+public class MainActivity extends ListActivity implements LocationListener{
 	 public final static String BUS_NO_MESSAGE = "com.yene.BUSNUMBER";
-	 private static final String TAG = "MAIN ACTIVITY";
+	 private static final String TAG = "MAIN-ACTIVITY";
 	 private boolean isConnected = false;
-	 private GPS gps;
+	 
 	 private Context context;
 	 private ConnectionDetector cd;
-	 private RequestBusStop downloadfile;
+	 private BufferedReaderExample bf;
+	 private LocationManager locationManager;
+	 private String provider;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		context = getApplicationContext();
 		super.onCreate(savedInstanceState);
 		cd = new ConnectionDetector(context);
-		//gps = new GPS(MainActivity.this);
-		//isConnected = cd.isConnectingToInternet();
+		isConnected = cd.isConnectingToInternet();
+		bf= new BufferedReaderExample();
+		InputStream is = this.getResources().openRawResource(R.drawable.filename);
+		bf.readName(is);
 		
-		//downloadfile = new RequestBusStop(this,"51.5259807","-0.1055831");
-		//downloadfile.execute();
-		BufferedReaderExample bf= new BufferedReaderExample();
-		InputStream is = this.getResources().openRawResource(R.drawable.bus);
-		bf.readName("",is);
-		setListAdapter(new CustomListBusStops(this, bf.eachStop()));
+		 // Get the location manager
+	    locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+	    
+	    // Define the criteria how to select the locatioin provider -> use
+	    // default
+	    Criteria criteria = new Criteria();
+	    provider = locationManager.getBestProvider(criteria, false);
+	    Location location = locationManager.getLastKnownLocation(provider);
+	    
+	    // Initialize the location fields
+	    if (location != null) {
+	      System.out.println("Provider " + provider + " has been selected.");
+	      onLocationChanged(location);
+	    } else {
+		
+	    }
+		
 	}
-	public void getGpsCoor(String lat , String lng){
+	public void getGpsCoor(double lat , double lng){
 		Log.d(TAG,"mainactivity");
-//		downloadfile = new RequestBusStop(this,lat,lng);
-//		downloadfile.execute();
+		setListAdapter(new CustomListBusStops(this, bf.findBusStop( lat,lng)));
 	}
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -59,18 +78,25 @@ public class MainActivity extends ListActivity {
 	    switch (item.getItemId()) {
 	        case R.id.reload:
 	        	 Toast.makeText(this,"selected=", Toast.LENGTH_LONG).show();
-	        	 getGpsCoor(gps.getLatituteField(),gps.getLongitudeField());
+	        	 //getGpsCoor(gps.getLatituteField(),gps.getLongitudeField());
 	            return true;
 	        default:
 	            return super.onOptionsItemSelected(item);
 	    }
 	}
 	
-	protected void onListItemClick(ListView l, View v, int position, long id) {
-		super.onListItemClick(l, v, position, id);
-		Toast.makeText(getBaseContext(), "position:"+JSONParser.getCollectionBusID().toString(), Toast.LENGTH_LONG).show();
-		sendMessage(JSONParser.getCollectionBusID().get(position));
-	}
+	 /* Request updates at startup */
+	 @Override
+	 protected void onResume() {
+	   super.onResume();
+	   locationManager.requestLocationUpdates(provider, 400, 1, this);
+	 }
+	
+//	protected void onListItemClick(ListView l, View v, int position, long id) {
+//		super.onListItemClick(l, v, position, id);
+//		Toast.makeText(getBaseContext(), "position:", Toast.LENGTH_LONG).show();
+//		sendMessage(JSONParser.getCollectionBusID().get(position));
+//	}
 		
 	public void sendMessage (String search_term){
 		Intent intent = new Intent(this, BusStop.class);
@@ -90,9 +116,34 @@ public class MainActivity extends ListActivity {
 	}
 	
 	public void addFavourit (View v){
-		
+		//Toast.makeText(getBaseContext(), "position:", Toast.LENGTH_LONG).show();
 		 final int position = getListView().getPositionForView((RelativeLayout)v.getParent());
-		 Toast.makeText(getBaseContext(), position+ "= position:"+JSONParser.getCollectionBusID().toString(), Toast.LENGTH_LONG).show();
-		 sendMessage(JSONParser.getCollectionBusID().get(position));
+		 String stopID = bf.eachStop().get(position).stopId;
+		 Toast.makeText(getBaseContext(), position+ "= position:"+bf.eachStop().get(position).stopId, Toast.LENGTH_LONG).show();
+		 sendMessage(stopID);
+	}
+	@Override
+	public void onLocationChanged(Location location) {
+		double lat = location.getLatitude();
+		double lng = location.getLongitude();
+	    
+	    getGpsCoor(lat,lng);
+	    System.out.print("\n Location Change lat ="+lat);
+		
+	}
+	@Override
+	public void onProviderDisabled(String provider) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public void onProviderEnabled(String provider) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public void onStatusChanged(String provider, int status, Bundle extras) {
+		// TODO Auto-generated method stub
+		
 	}
 }

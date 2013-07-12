@@ -4,14 +4,15 @@ package com.yene.bustiming;
 
 public class BusStopFile  implements Comparable<BusStopFile>{ 
 
-	String stopId,stopName,stopLat,stopLng,bus;
+	String stopId,stopName,stopLat,stopLng,bus,toward;
 	
-	public BusStopFile(String id, String name , String lat ,String lng, String bus){
-		this.stopId= id;
-		this.stopName = name;
-		this.stopLat= lat;
-		this.stopLng =lng;
-		this.bus=bus;
+	public BusStopFile(String id, String name , String lat ,String lng, String bus,String toward){
+		this.stopId 	= id;
+		this.stopName 	= name;
+		this.stopLat 	= lat;
+		this.stopLng 	= lng;
+		this.bus		= bus;
+		this.toward 	= toward;
 	}
 
 	@Override
