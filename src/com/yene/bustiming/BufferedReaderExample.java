@@ -115,7 +115,7 @@ public class BufferedReaderExample  {
 			double d 	= distance(nearLat,nearLng,lat,lng);
 			//System.out.println("Distnace ="+d );
 			if(d < 0.5){
-				System.out.print("\n\n["+item.toString()+"]");
+				//System.out.print("\n\n["+item.toString()+"]");
 				nearby.add(item);
 				counts++;
 				}

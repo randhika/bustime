@@ -41,7 +41,7 @@ public class MainActivity extends ListActivity implements LocationListener{
 		cd = new ConnectionDetector(context);
 		isConnected = cd.isConnectingToInternet();
 		bf= new BufferedReaderExample();
-		InputStream is = this.getResources().openRawResource(R.drawable.filename);
+		InputStream is = this.getResources().openRawResource(R.drawable.busstop);
 		bf.readName(is);
 		
 		 // Get the location manager
@@ -50,7 +50,7 @@ public class MainActivity extends ListActivity implements LocationListener{
 	    // Define the criteria how to select the locatioin provider -> use
 	    // default
 	    Criteria criteria = new Criteria();
-	    provider = locationManager.getBestProvider(criteria, false);
+	    provider = locationManager.getBestProvider(criteria, true);
 	    Location location = locationManager.getLastKnownLocation(provider);
 	    
 	    // Initialize the location fields

@@ -57,7 +57,7 @@ public class JSONParser {
             String line,urlForBusNumber, busNumbers = null;
             collectionBusID.clear();
             while ((line = reader.readLine()) != null) {
-            	BusStopObject busStopObject = new BusStopObject("");
+            	BusStopObject busStopObject = new BusStopObject("","","");
             	Log.d(TAG,line);
 	            String []split = line.split(",");
 	            if(split.length>3 && split[3] != null && split.length < 6 ){

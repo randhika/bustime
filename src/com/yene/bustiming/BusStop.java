@@ -47,14 +47,12 @@ public class BusStop extends ListActivity {
 		toast.show();
 		new DownloadFilesTask().execute();
 	}
-
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.activity_main, menu);
 		return true;
 	}
-	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 	    switch (item.getItemId()) {
@@ -74,12 +72,9 @@ public class BusStop extends ListActivity {
 	    //db.addFavouritStop( new MyBusStopObject(BUS_MESSAGE,BUS_DIRECTION));
 	    //openBusStopList(item,busNumber);
 	  }
-	
 	public void openBusStopList (String direction, String busNumber){
 		Intent intent = new Intent(this, BusStopList.class);
-	   
 	    String search_term = direction+","+busNumber;
-	    
 	    Context context = getApplicationContext();
 		CharSequence text = search_term;
 		int duration = Toast.LENGTH_SHORT;
@@ -88,27 +83,22 @@ public class BusStop extends ListActivity {
 	    intent.putExtra(BUS_DIRECTION, search_term);
 	 	startActivity(intent);
 	}
-	
-
 	private String convertDate( Long str )
 	{
 		
 		Date countDown = new Date(str);
 		Date currentTime = new Date();
-		
 		SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss", Locale.ENGLISH);
 		String dateStop = DATE_FORMAT.format(countDown);
 		String  dateStart = DATE_FORMAT.format(currentTime);
 		//HH converts hour in 24 hours format (0-23), day calculation
 		SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss",Locale.ENGLISH);
- 
 		Date d1 = null;
 		Date d2 = null;
 		Long diffMinutes =null;
 		try {
 			d1 = format.parse(dateStart);
 			d2 = format.parse(dateStop);
- 
 			//in milliseconds
 			long diff = d2.getTime() - d1.getTime();
 			 	 diffMinutes = diff / (60 * 1000) % 60;
@@ -125,9 +115,7 @@ public class BusStop extends ListActivity {
 	}
 	
 	private class DownloadFilesTask extends AsyncTask<URL, Integer, Long> {
-		
 		private static final String TAG = "DownloadFilesTask";
-		
 		protected void onProgressUpdate(Integer... progress) {
 	         //setProgressPercent(progress[0]);
 	     }
@@ -139,11 +127,12 @@ public class BusStop extends ListActivity {
 	    	 for(int index = 0 ; index < item.size(); index++){
 	    		 String []busDirection= item.get(index).split(",",0);
 	    		 String arrivTime = busDirection[3].replace("]", "");
-	    		 BusStopObject busStopObj = new BusStopObject(convertDate( Long.parseLong(arrivTime, 10)));	  
 	    		 busStopName = busDirection[1].replace("\"", "");
-	    		 busStopObj.setTowards(busDirection[1].replace("\"", ""));
-	 	         busStopObj.setbusNumber(busDirection[2].replace("\"", ""));	 	      
-	 	        
+	    		 String toward =busDirection[1].replace("\"", "");
+	 	         String busNumber = busDirection[2].replace("\"", "");	 	
+	 	         String countDown = convertDate( Long.parseLong(arrivTime, 10));
+	 	         
+	    		 BusStopObject busStopObj = new BusStopObject(toward,busNumber, countDown );
 	    		 timeArrivle.add(busStopObj);
 	    	 }
 	    	 Collections.sort(timeArrivle);  
@@ -153,12 +142,8 @@ public class BusStop extends ListActivity {
 
 		@Override
 		protected Long doInBackground(URL... params) {
-			
 			String url = "http://countdown.api.tfl.gov.uk/interfaces/ura/instant_V1?StopCode1="+busStopID;
 			item = gerUrl.getJSONFromUrl(url);
-			//ConnectionDetector cd;
-			//cd = new ConnectionDetector(BusStop.this);
-			//cd.showAlertDialog(BusStop.this, "Number of Bus At this Bus Stop", ""+item.size(), false);
 			return null;
 		}
 	
