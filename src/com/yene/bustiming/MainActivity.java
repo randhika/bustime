@@ -30,7 +30,7 @@ public class MainActivity extends ListActivity implements LocationListener{
 	 
 	 private Context context;
 	 private ConnectionDetector cd;
-	 private BufferedReaderExample bf;
+	 private ReadFile bf;
 	 private LocationManager locationManager;
 	 private String provider;
 	
@@ -40,8 +40,10 @@ public class MainActivity extends ListActivity implements LocationListener{
 		super.onCreate(savedInstanceState);
 		cd = new ConnectionDetector(context);
 		isConnected = cd.isConnectingToInternet();
-		bf= new BufferedReaderExample();
+
+		bf= new ReadFile();
 		InputStream is = this.getResources().openRawResource(R.drawable.busstop);
+
 		bf.readName(is);
 		
 		 // Get the location manager
