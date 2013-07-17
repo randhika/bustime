@@ -9,7 +9,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.app.Activity;
+
 import android.app.ListActivity;
 import android.content.Context;
 import android.content.Intent;
@@ -18,10 +18,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-import android.widget.ListView;
 import android.widget.RelativeLayout;
 
 import android.widget.Toast;
+
+
 
 public class MainActivity extends ListActivity implements LocationListener{
 	 public final static String BUS_NO_MESSAGE = "com.yene.BUSNUMBER";
@@ -79,7 +80,9 @@ public class MainActivity extends ListActivity implements LocationListener{
 	public boolean onOptionsItemSelected(MenuItem item) {
 	    switch (item.getItemId()) {
 	        case R.id.reload:
-	        	 Toast.makeText(this,"selected=", Toast.LENGTH_LONG).show();
+	        	 Toast.makeText(this,"selected Map=", Toast.LENGTH_LONG).show();
+	        	 Intent intent = new Intent(this, MapView.class);
+	        	 startActivity(intent);
 	        	 //getGpsCoor(gps.getLatituteField(),gps.getLongitudeField());
 	            return true;
 	        default:
