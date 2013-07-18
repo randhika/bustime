@@ -75,21 +75,18 @@ public class MainActivity extends ListActivity implements LocationListener{
 		getMenuInflater().inflate(R.menu.reload, menu);
 		return true;
 	}
-	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 	    switch (item.getItemId()) {
-	        case R.id.reload:
-	        	 Toast.makeText(this,"selected Map=", Toast.LENGTH_LONG).show();
+	        case R.id.mapview:
+	        	 Toast.makeText(this,"Loading Map...", Toast.LENGTH_LONG).show();
 	        	 Intent intent = new Intent(this, MapView.class);
 	        	 startActivity(intent);
-	        	 //getGpsCoor(gps.getLatituteField(),gps.getLongitudeField());
 	            return true;
 	        default:
 	            return super.onOptionsItemSelected(item);
 	    }
 	}
-	
 	 /* Request updates at startup */
 	 @Override
 	 protected void onResume() {
