@@ -1,10 +1,14 @@
 package com.yene.bustiming;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 
 
 public class BusStopFile  implements Comparable<BusStopFile>{ 
 
 	String stopId,stopName,stopLat,stopLng,bus,toward;
+	private int mData;
 	
 	public BusStopFile(String id, String name , String lat ,String lng, String bus,String toward){
 		this.stopId 	= id;
@@ -17,7 +21,7 @@ public class BusStopFile  implements Comparable<BusStopFile>{
 
 	@Override
 	public String toString() {
-		String busStopObject = "Name = "+stopName+",  StopId = "+stopId +", Lat = "+stopLat +", Lng = "+stopLng+ ",  Bus = "+bus;
+		String busStopObject = "Name = "+stopName+",  StopId = "+stopId +", Lat = "+stopLat +", Lng = "+stopLng+ ",  Bus = "+bus+ ", Toward = "+toward;
 		return busStopObject;
 	}
 
@@ -73,4 +77,7 @@ public class BusStopFile  implements Comparable<BusStopFile>{
 		return thisCount-countDown;
 		
 	}
-}
+
+	
+
+	}

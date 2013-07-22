@@ -20,7 +20,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.yene.example.bustiming.R;
+import com.yene.bustiming.R;
 
 public class Direction extends ListActivity {
 	 public final static String BUS_MESSAGE = "com.yene.BUSNUMBER";
@@ -38,8 +38,6 @@ public class Direction extends ListActivity {
 		busNumber = intent.getStringExtra(MainActivity.BUS_NO_MESSAGE);
 		Toast toast = Toast.makeText(context, busNumber, duration);
 		toast.show();
-	
-		
 		    new DownloadFilesTask().execute();
 	}
 

@@ -1,6 +1,6 @@
 package com.yene.bustiming;
 
-import com.yene.example.bustiming.R;
+import com.yene.bustiming.R;
 import android.app.Activity;
 import android.os.Bundle;
 

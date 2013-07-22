@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import com.yene.example.bustiming.R;
+import com.yene.bustiming.R;
 public class CustomListAdapter extends BaseAdapter {
 	 
     private static final String TAG = "CUSTOMLISTADAPTER";

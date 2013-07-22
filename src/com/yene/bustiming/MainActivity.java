@@ -1,14 +1,16 @@
 package com.yene.bustiming;
 
 import java.io.InputStream;
+import java.util.ArrayList;
 
-import com.yene.example.bustiming.R;
+import com.yene.bustiming.R;
 
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.Parcelable;
 
 import android.app.ListActivity;
 import android.content.Context;
@@ -25,10 +27,12 @@ import android.widget.Toast;
 
 
 public class MainActivity extends ListActivity implements LocationListener{
-	 public final static String BUS_NO_MESSAGE = "com.yene.BUSNUMBER";
-	 private static final String TAG = "MAIN-ACTIVITY";
-	 private boolean isConnected = false;
-	 
+	 public final static String BUS_NO_MESSAGE 	= "com.yene.BUSNUMBER";
+	 public final static String TOWARD 			= "com.yene.TOWARD";
+	 public final static String BUSLIST 		= "com.yene.BUSSTOP";
+	 private static final String TAG 			= "MAIN-ACTIVITY";
+	 private boolean isConnected 				= false;
+	 private ArrayList<BusStopFile> bsf 		= new ArrayList<BusStopFile>();
 	 private Context context;
 	 private ConnectionDetector cd;
 	 private ReadFile bf;
@@ -67,7 +71,8 @@ public class MainActivity extends ListActivity implements LocationListener{
 	}
 	public void getGpsCoor(double lat , double lng){
 		Log.d(TAG,"mainactivity");
-		setListAdapter(new CustomListBusStops(this, bf.findBusStop( lat,lng)));
+		bsf = bf.findBusStop( lat,lng);
+		setListAdapter(new CustomListBusStops(this, bsf));
 	}
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -77,12 +82,15 @@ public class MainActivity extends ListActivity implements LocationListener{
 	}
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
+		Toast.makeText(this,"Loading Map...", Toast.LENGTH_LONG).show();
 	    switch (item.getItemId()) {
 	        case R.id.mapview:
-	        	 Toast.makeText(this,"Loading Map...", Toast.LENGTH_LONG).show();
 	        	 Intent intent = new Intent(this, MapView.class);
 	        	 startActivity(intent);
 	            return true;
+	        case R.id.mystop:
+	        	Toast.makeText(this,"Loading my favourit...", Toast.LENGTH_LONG).show();
+	        	return true;
 	        default:
 	            return super.onOptionsItemSelected(item);
 	    }
@@ -93,14 +101,9 @@ public class MainActivity extends ListActivity implements LocationListener{
 	   super.onResume();
 	   locationManager.requestLocationUpdates(provider, 400, 1, this);
 	 }
-	
-//	protected void onListItemClick(ListView l, View v, int position, long id) {
-//		super.onListItemClick(l, v, position, id);
-//		Toast.makeText(getBaseContext(), "position:", Toast.LENGTH_LONG).show();
-//		sendMessage(JSONParser.getCollectionBusID().get(position));
-//	}
-		
-	public void sendMessage (String search_term){
+
+
+	public void sendMessage (String search_term, String toward,String bus){
 		Intent intent = new Intent(this, BusStop.class);
 	    //EditText editText = (EditText) findViewById(R.id.busN);
 	    //String search_term = editText.getText().toString();
@@ -113,7 +116,9 @@ public class MainActivity extends ListActivity implements LocationListener{
 			cd.showAlertDialog(MainActivity.this, "No Connection", "Please enable your internet connection.", false);
 	    }else if(isConnected){
 	    	 intent.putExtra(BUS_NO_MESSAGE, search_term);
-	 	    startActivity(intent);
+	    	 intent.putExtra(TOWARD, toward);
+	    	 intent.putExtra(BUSLIST, bus);
+	 	     startActivity(intent);
 	    }
 	}
 	
@@ -121,8 +126,10 @@ public class MainActivity extends ListActivity implements LocationListener{
 		//Toast.makeText(getBaseContext(), "position:", Toast.LENGTH_LONG).show();
 		 final int position = getListView().getPositionForView((RelativeLayout)v.getParent());
 		 String stopID = bf.eachStop().get(position).stopId;
+		 String toward = bf.eachStop().get(position).toward;
+		 String bus = bf.eachStop().get(position).bus;
 		 Toast.makeText(getBaseContext(), position+ "= position:"+bf.eachStop().get(position).stopId, Toast.LENGTH_LONG).show();
-		 sendMessage(stopID);
+		 sendMessage(stopID,toward,bus);
 	}
 	@Override
 	public void onLocationChanged(Location location) {
@@ -148,4 +155,5 @@ public class MainActivity extends ListActivity implements LocationListener{
 		// TODO Auto-generated method stub
 		
 	}
+
 }

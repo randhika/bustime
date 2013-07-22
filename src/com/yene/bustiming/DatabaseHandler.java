@@ -28,8 +28,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     // logManager Table Columns names
     private static final String KEY_ID = "id"; 
     private static final String KEY_BUS_STOP_ID="stopId";
-    private static final String KEY_MSG="direction";
-    private static final String KEY_TIME="time";
+    private static final String KEY_STOP_NAME="busStopName";
+    private static final String KEY_TOWARD="toward";
+    private static final String KEY_BUS_LIST="buses";
 
 	private static final String TAG = "DatabaseHandler";
     
@@ -47,8 +48,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         String CREATE_CONTACTS_TABLE = "CREATE TABLE " + TABLE_LOGS + "("
                 + KEY_ID + " INTEGER PRIMARY KEY, "
                 + KEY_BUS_STOP_ID + " TEXT, "
-                + KEY_MSG + " TEXT, "
-        		+ KEY_TIME +" TEXT "+")";
+                + KEY_STOP_NAME + " TEXT, "
+                + KEY_BUS_LIST + " TEXT, "
+        		+ KEY_TOWARD +" TEXT "+")";
         db.execSQL(CREATE_CONTACTS_TABLE);
         
         Log.d(TAG,"Table Created...");
@@ -68,15 +70,14 @@ public class DatabaseHandler extends SQLiteOpenHelper {
      * All CRUD(Create, Read, Update, Delete) Operations
      */
  
-    // Adding new contact
-    void addFavouritStop(MyBusStopObject mystop) {
+    // Adding new stop
+    void addFavouritStop(String id, String name , String toward , String busList) {
         SQLiteDatabase db = this.getWritableDatabase();
-        
         ContentValues values = new ContentValues();
-        values.put(KEY_BUS_STOP_ID, mystop.getId());
-        values.put(KEY_MSG, mystop.getDirection()); // Contact Type
-        values.put(KEY_TIME, mystop.getTime());// time of contact
- 
+        values.put(KEY_BUS_STOP_ID, id);
+        values.put(KEY_STOP_NAME, 	name);
+        values.put(KEY_TOWARD, 		toward);
+        values.put(KEY_BUS_LIST, 	busList);
         // Inserting Row
         db.insert(TABLE_LOGS, null, values);
         db.close(); // Closing database connection
@@ -84,26 +85,22 @@ public class DatabaseHandler extends SQLiteOpenHelper {
   
  
     // Getting single contact LOG
-    MyBusStopObject getContact(String id) {
-        SQLiteDatabase db = this.getReadableDatabase();
- 
-        Cursor cursor = db.query(TABLE_LOGS, new String[] { KEY_ID,KEY_MSG, KEY_TIME,}, KEY_ID + "=?",
-                new String[] { String.valueOf(id) }, null, null, null);
-        if (cursor != null)
-            cursor.moveToFirst();
- 
-        MyBusStopObject contact = new MyBusStopObject(cursor.getString(1),cursor.getString(2));
-        // return contact
-        return contact;
-    }
+    //MyBusStopObject getContact(String id) {
+    //   SQLiteDatabase db = this.getReadableDatabase();
+    //  Cursor cursor = db.query(TABLE_LOGS, new String[] { KEY_ID,KEY_MSG, KEY_TIME,}, KEY_ID + "=?",
+    //          new String[] { String.valueOf(id) }, null, null, null);
+    //  if (cursor != null)
+    //      cursor.moveToFirst();
+    //  MyBusStopObject contact = new MyBusStopObject(cursor.getString(1),cursor.getString(2));
+    // return contact
+    //  return contact;
+    //}
     
     String getLastContact(){
     	// Select Last Query
         String selectQuery = "SELECT  * FROM " + TABLE_LOGS;
- 
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
-        
     	if(cursor.moveToLast()){  
     		String lastRow= "Number :"+cursor.getString(1)+" Type: "+cursor.getString(2)+" Time: "+cursor.getString(3);
     		cursor.close();
@@ -113,33 +110,29 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
  
     // Getting All Favour Bus Stop
-    public List<MyBusStopObject> getAllContacts() {
-        List<MyBusStopObject> contactList = new ArrayList<MyBusStopObject>();
+    public ArrayList<BusStopFile> getAllFavourStop() {
+        ArrayList<BusStopFile> favouritStop = new ArrayList<BusStopFile>();
         // Select All Query
         String selectQuery = "SELECT  * FROM " + TABLE_LOGS;
- 
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
- 
         // looping through all rows and adding to list
         if (cursor.moveToFirst()) {
             do {
-            	MyBusStopObject   myFavStop = new MyBusStopObject("", "");
-            	myFavStop.setId(cursor.getString(0));
-                // Adding contact to list
-                contactList.add(myFavStop);
+            	BusStopFile   myFavStop = new BusStopFile(cursor.getString(1), cursor.getString(2),"1","2",cursor.getString(3),cursor.getString(4));
+            	favouritStop.add(myFavStop);
             } while (cursor.moveToNext());
         }
         // return contact list
         db.close();
-        return contactList;
+        return favouritStop;
     }
     // Updating single contact
     public int updateContact(MyBusStopObject myStop) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put(KEY_ID, myStop.getId());
-        values.put(KEY_MSG, myStop.getDirection());
+        //values.put(KEY_ID, myStop.getId());
+        //values.put(KEY_TOWARD, myStop.direction);
         // updating row
         return db.update(TABLE_LOGS, values, KEY_ID + " = ?",
                 new String[] { String.valueOf(myStop.getId()) });

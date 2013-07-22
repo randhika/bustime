@@ -11,7 +11,7 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.yene.example.bustiming.R;
+import com.yene.bustiming.R;
 public class CustomListBusStops extends BaseAdapter {
 	 
     private static final String TAG = "CUSTOMLISTADAPTER";

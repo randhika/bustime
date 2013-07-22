@@ -22,7 +22,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
-import com.yene.example.bustiming.R;
+import com.yene.bustiming.R;
 
 
 public class BusStop extends ListActivity {
@@ -31,7 +31,7 @@ public class BusStop extends ListActivity {
      public SingelBusStop  gerUrl = new SingelBusStop();
      DatabaseHandler db ;
      ArrayList<String> item = new ArrayList<String>();
-     String busStopID,busStopName,direction;
+     String busStopID,busStopName,direction,busList,toward;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -42,6 +42,8 @@ public class BusStop extends ListActivity {
 		Intent intent = getIntent();
 		int duration = Toast.LENGTH_SHORT;
 		busStopID = intent.getStringExtra(MainActivity.BUS_NO_MESSAGE);
+		toward = intent.getStringExtra(MainActivity.TOWARD);
+		busList= intent.getStringExtra(MainActivity.BUSLIST);
 		
 		Toast toast = Toast.makeText(context, busStopID, duration);
 		toast.show();
@@ -57,21 +59,24 @@ public class BusStop extends ListActivity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 	    switch (item.getItemId()) {
 	        case R.id.save_stop:
-	        	 Toast.makeText(this,"selected=" +busStopID, Toast.LENGTH_LONG).show();
-	        	// db.addFavouritStop( new MyBusStopObject(busStopID,busStopName,"now"));
-	        	 //Toast.makeText(this,"selected=" + db.getLastContact(), Toast.LENGTH_LONG).show();
-	        	 db.addFavouritStop( new MyBusStopObject(busStopID,BUS_DIRECTION));
+	        	 Toast.makeText(this,"Save This Bus Stop=" +busStopID +" Toward = "+toward +" Bus List : "+ busList , Toast.LENGTH_LONG).show();
+	        	 db.addFavouritStop(busStopID,busStopName,toward,busList);
+	        	 System.out.print("--- Read all data from DB..\n");
+	        	 for( BusStopFile index : db.getAllFavourStop()){
+	        		 System.out.print(index.toString()+"\n");
+	        	 }
+	        	 
 	            return true;
 	        default:
 	            return super.onOptionsItemSelected(item);
 	    }
 	}
-	protected void onListItemClick(CustomListAdapter l, View v, int position, long id) {
-	    String item = (String) getListAdapter().getItem(position);
-	    Toast.makeText(this, item + " selected", Toast.LENGTH_LONG).show();
+	//protected void onListItemClick(CustomListAdapter l, View v, int position, long id) {
+	 //   String item = (String) getListAdapter().getItem(position);
+	  //  Toast.makeText(this, item + " selected", Toast.LENGTH_LONG).show();
 	    //db.addFavouritStop( new MyBusStopObject(BUS_MESSAGE,BUS_DIRECTION));
 	    //openBusStopList(item,busNumber);
-	  }
+	 // }
 	public void openBusStopList (String direction, String busNumber){
 		Intent intent = new Intent(this, BusStopList.class);
 	    String search_term = direction+","+busNumber;

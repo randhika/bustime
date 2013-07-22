@@ -19,7 +19,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.yene.example.bustiming.R;
+import com.yene.bustiming.R;
 
 public class BusStopList extends ListActivity {
 	

@@ -12,7 +12,7 @@ import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.yene.example.bustiming.R;
+import com.yene.bustiming.R;
 
 import android.content.Context;
 import android.content.Intent;
@@ -52,15 +52,15 @@ public class MapView  extends FragmentActivity  implements LocationListener ,OnI
         context = getApplicationContext();
         cd = new ConnectionDetector(context);
 		isConnected = cd.isConnectingToInternet();
-        
+		//Intent intent = getIntent();
+		//TO-BE Done
+		//busStopLocation = intent.getParcelableArrayListExtra(MainActivity.BUS_NO_MESSAGE);
+		//System.out.println("busStopLocation: "+busStopLocation.size());
         bf= new ReadFile();
 		InputStream is = this.getResources().openRawResource(R.drawable.busstop);
-
 		bf.readName(is);
-		
 		 // Get the location manager
 	    locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-	    
 	    // Define the criteria how to select the locatioin provider -> use
 	    // default
 	    Criteria criteria = new Criteria();
