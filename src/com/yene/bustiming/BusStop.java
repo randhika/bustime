@@ -12,6 +12,7 @@ import java.util.Locale;
 
 
 import android.app.ListActivity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -29,23 +30,29 @@ public class BusStop extends ListActivity {
 	 public final static String BUS_MESSAGE = "com.yene.BUSNUMBER";
 	 public static final String BUS_DIRECTION = "com.yene.BUSDIRECTION";
      public SingelBusStop  gerUrl = new SingelBusStop();
+     private ProgressDialog dialog;
      DatabaseHandler db ;
      ArrayList<String> item = new ArrayList<String>();
      String busStopID,busStopName,direction,busList,toward;
+     Context context;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		//setContentView(R.layout.select_direction);
+		
 		db = new DatabaseHandler(this);
-		//db.getLastContact();
-		Context context = getApplicationContext();
+		
+		dialog = new ProgressDialog(this);
+		dialog.setMessage("Please wait loading...");
+		dialog.show();
+		
+		context = getApplicationContext();
 		Intent intent = getIntent();
 		int duration = Toast.LENGTH_SHORT;
 		busStopID = intent.getStringExtra(MainActivity.BUS_NO_MESSAGE);
 		toward = intent.getStringExtra(MainActivity.TOWARD);
 		busList= intent.getStringExtra(MainActivity.BUSLIST);
 		
-		Toast toast = Toast.makeText(context, busStopID, duration);
+		Toast toast = Toast.makeText(context, "Class: BusStop "+busStopID, duration);
 		toast.show();
 		new DownloadFilesTask().execute();
 	}
@@ -115,27 +122,30 @@ public class BusStop extends ListActivity {
 		if(diffMinutes == 0){
 			return "0";
 		}
- 
 		return ""+diffMinutes;
 	}
 	
 	private class DownloadFilesTask extends AsyncTask<URL, Integer, Long> {
-		private static final String TAG = "DownloadFilesTask";
+		private static final String TAG = "DownloadFilesTask";		
+		
+		
 		protected void onProgressUpdate(Integer... progress) {
-	         //setProgressPercent(progress[0]);
+			
+			 Log.d(TAG, "Show Message");
+			 System.out.print(TAG);
 	     }
 	     protected void onPostExecute(Long result) {
-	    	
+	    	dialog.dismiss();     
 	    	item.remove(0);
 	    	ArrayList<BusStopObject> timeArrivle = new  ArrayList<BusStopObject>();
 	    	
 	    	 for(int index = 0 ; index < item.size(); index++){
-	    		 String []busDirection= item.get(index).split(",",0);
-	    		 String arrivTime = busDirection[3].replace("]", "");
-	    		 busStopName = busDirection[1].replace("\"", "");
-	    		 String toward =busDirection[1].replace("\"", "");
-	 	         String busNumber = busDirection[2].replace("\"", "");	 	
-	 	         String countDown = convertDate( Long.parseLong(arrivTime, 10));
+	    		 String []busDirection	= item.get(index).split(",",0);
+	    		 String arrivTime 		= busDirection[3].replace("]", "");
+	    		 busStopName 			= busDirection[1].replace("\"", "");
+	    		 String toward 			= busDirection[1].replace("\"", "");
+	 	         String busNumber 		= busDirection[2].replace("\"", "");	 	
+	 	         String countDown 		= convertDate( Long.parseLong(arrivTime, 10));
 	 	         
 	    		 BusStopObject busStopObj = new BusStopObject(toward,busNumber, countDown );
 	    		 timeArrivle.add(busStopObj);

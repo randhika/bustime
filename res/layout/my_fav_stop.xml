@@ -9,20 +9,22 @@
      <Button
         android:id="@+id/button1"
         style="@style/ButtonText"
-        android:layout_width="wrap_content"
+        android:layout_width="100dp"
         android:layout_height="wrap_content"       
         android:layout_alignParentRight="true"
-        android:layout_marginTop="26dip"
+        android:layout_marginTop="26dp"
+       
         android:background="@drawable/blue"
         android:gravity="center"
         android:onClick="addFavourit"
         android:text="@string/view_button_text" />
+     
     <TextView
         android:id="@+id/toward"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dip"
-        android:layout_marginRight="20dip"
+        android:layout_marginTop="26dp"
+        android:layout_marginRight="100dp"
         android:text=""
         android:textColor="#336699"
         android:textSize="20sp" />
@@ -56,7 +58,17 @@
 
       
     </LinearLayout>
-    
-   
+
+       <Button
+           android:id="@+id/button2"
+           style="@style/ButtonText"
+           android:layout_width="100dp"
+           android:layout_height="wrap_content"
+           android:layout_alignRight="@+id/linearLayout1"
+           android:layout_below="@+id/linearLayout1"
+           android:background="@drawable/red"
+           android:gravity="center"
+           android:onClick="removeFavourit"
+           android:text="@string/remove" />
  
 </RelativeLayout>

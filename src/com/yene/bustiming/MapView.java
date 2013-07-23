@@ -14,9 +14,9 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.yene.bustiming.R;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
@@ -33,6 +33,8 @@ import android.widget.Toast;
 public class MapView  extends FragmentActivity  implements LocationListener ,OnInfoWindowClickListener, InfoWindowAdapter{
     private static final String TAG = "MapView";
     public final static String BUS_NO_MESSAGE = "com.yene.BUSNUMBER";
+    public final static String TOWARD 			= "com.yene.TOWARD";
+	public final static String BUSLIST 		= "com.yene.BUSSTOP";
 	/**
      * Note that this may be null if the Google Play services APK is not available.
      */
@@ -43,6 +45,7 @@ public class MapView  extends FragmentActivity  implements LocationListener ,OnI
 	private boolean isConnected = false;
 	private ConnectionDetector cd;
 	private Context context;
+	private ProgressDialog dialog;
 	
 	private ArrayList<BusStopFile> busStopLocation = new ArrayList<BusStopFile> ();
     @Override
@@ -52,10 +55,11 @@ public class MapView  extends FragmentActivity  implements LocationListener ,OnI
         context = getApplicationContext();
         cd = new ConnectionDetector(context);
 		isConnected = cd.isConnectingToInternet();
-		//Intent intent = getIntent();
-		//TO-BE Done
-		//busStopLocation = intent.getParcelableArrayListExtra(MainActivity.BUS_NO_MESSAGE);
-		//System.out.println("busStopLocation: "+busStopLocation.size());
+		
+		dialog = new ProgressDialog(this);
+		dialog.setMessage("Please wait loading...");
+		dialog.show();
+		
         bf= new ReadFile();
 		InputStream is = this.getResources().openRawResource(R.drawable.busstop);
 		bf.readName(is);
@@ -129,7 +133,7 @@ public class MapView  extends FragmentActivity  implements LocationListener ,OnI
     		Double lat = Double.parseDouble(item.getStopLat());
     		Double lng = Double.parseDouble(item.getStopLng());
     		String toward = item.toward;
-        mMap.addMarker(new MarkerOptions().position(new LatLng(lat, lng)).title("Toward :"+toward).snippet(item.bus).icon(BitmapDescriptorFactory.fromResource(R.drawable.bus)));
+    		mMap.addMarker(new MarkerOptions().position(new LatLng(lat, lng)).title("Toward :"+toward).snippet(item.bus).icon(BitmapDescriptorFactory.fromResource(R.drawable.bus)));
     	}
     	
         mMap.setTrafficEnabled(true);
@@ -137,7 +141,7 @@ public class MapView  extends FragmentActivity  implements LocationListener ,OnI
         mMap.getUiSettings().setZoomControlsEnabled(true);
         mMap.setInfoWindowAdapter(new MapView());
         mMap.setOnInfoWindowClickListener(this);
-    	
+        dialog.dismiss();  
     }
 
 	@Override
@@ -171,12 +175,11 @@ public class MapView  extends FragmentActivity  implements LocationListener ,OnI
 	@Override
 	public void onInfoWindowClick(Marker marker) {
 		 String mID =  marker.getId().substring(1);
-		 int index = Integer.parseInt(mID);
-		 Log.d(TAG, marker.getTitle()); 
-		 Log.d(TAG, marker.getId());
-		 Log.d(TAG, busStopLocation.get(index).toString());
-		 Log.d(TAG, mID);
-		 sendMessage(busStopLocation.get(index).stopId);
+		 int index 	=  Integer.parseInt(mID);
+		 String stopId  = busStopLocation.get(index).stopId;
+		 String toward 	= busStopLocation.get(index).toward;
+		 String bus 	= busStopLocation.get(index).bus;
+		 sendMessage(stopId,toward,bus);
 		
 	}
 
@@ -194,7 +197,7 @@ public class MapView  extends FragmentActivity  implements LocationListener ,OnI
 		return null;
 	}
 	
-	public void sendMessage (String search_term){
+	public void sendMessage (String search_term, String toward,String bus){
 		Intent intent = new Intent(this, BusStop.class);
 	    //EditText editText = (EditText) findViewById(R.id.busN);
 	    //String search_term = editText.getText().toString();
@@ -204,10 +207,12 @@ public class MapView  extends FragmentActivity  implements LocationListener ,OnI
 			Toast toast = Toast.makeText(context, text, duration);
 			toast.show();
 	    }else if(!isConnected){	
-			cd.showAlertDialog(this, "No Connection", "Please enable your internet connection.", false);
+			cd.showAlertDialog(MapView.this, "No Connection", "Please enable your internet connection.", false);
 	    }else if(isConnected){
 	    	 intent.putExtra(BUS_NO_MESSAGE, search_term);
-	 	    startActivity(intent);
+	    	 intent.putExtra(TOWARD, toward);
+	    	 intent.putExtra(BUSLIST, bus);
+	 	     startActivity(intent);
 	    }
 	}
 

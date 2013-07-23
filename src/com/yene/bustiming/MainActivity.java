@@ -45,21 +45,16 @@ public class MainActivity extends ListActivity implements LocationListener{
 		super.onCreate(savedInstanceState);
 		cd = new ConnectionDetector(context);
 		isConnected = cd.isConnectingToInternet();
-
 		bf= new ReadFile();
 		InputStream is = this.getResources().openRawResource(R.drawable.busstop);
-
 		bf.readName(is);
-		
 		 // Get the location manager
 	    locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-	    
 	    // Define the criteria how to select the locatioin provider -> use
 	    // default
 	    Criteria criteria = new Criteria();
 	    provider = locationManager.getBestProvider(criteria, true);
 	    Location location = locationManager.getLastKnownLocation(provider);
-	    
 	    // Initialize the location fields
 	    if (location != null) {
 	      System.out.println("Provider " + provider + " has been selected.");
@@ -70,7 +65,7 @@ public class MainActivity extends ListActivity implements LocationListener{
 		
 	}
 	public void getGpsCoor(double lat , double lng){
-		Log.d(TAG,"mainactivity");
+		bsf.clear();
 		bsf = bf.findBusStop( lat,lng);
 		setListAdapter(new CustomListBusStops(this, bsf));
 	}
@@ -87,9 +82,11 @@ public class MainActivity extends ListActivity implements LocationListener{
 	        case R.id.mapview:
 	        	 Intent intent = new Intent(this, MapView.class);
 	        	 startActivity(intent);
-	            return true;
+	        	 return true;
 	        case R.id.mystop:
 	        	Toast.makeText(this,"Loading my favourit...", Toast.LENGTH_LONG).show();
+	        	Intent intent2 = new Intent(this, FavouritStop.class);
+	        	startActivity(intent2);
 	        	return true;
 	        default:
 	            return super.onOptionsItemSelected(item);
@@ -99,10 +96,9 @@ public class MainActivity extends ListActivity implements LocationListener{
 	 @Override
 	 protected void onResume() {
 	   super.onResume();
-	   locationManager.requestLocationUpdates(provider, 400, 1, this);
+	   locationManager.requestLocationUpdates(provider, 5000, 10, this);
 	 }
-
-
+	 
 	public void sendMessage (String search_term, String toward,String bus){
 		Intent intent = new Intent(this, BusStop.class);
 	    //EditText editText = (EditText) findViewById(R.id.busN);

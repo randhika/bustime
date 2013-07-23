@@ -15,6 +15,9 @@
     <string name="select_bus_name">Bus Stop</string>
     <string name="near_by_stop">Near by Stop</string>
     <string name="mystop">Favourit</string>
+    <string name="menu">Menu</string>
+    <string name="search">Search</string>
+     <string name="remove">Remove</string>
      
      <style name="ButtonText">
 	    <item name="android:layout_width">fill_parent</item>

@@ -139,11 +139,11 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
  
     // Deleting single contact
-    public void deleteContact( MyBusStopObject myStop) {
+    public void deleteFavourit( String myStop) {
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(TABLE_LOGS
-        		, KEY_ID + " = ?",
-                new String[] { String.valueOf(myStop.getId()) });
+        		, KEY_BUS_STOP_ID + " = ?",
+                new String[] { String.valueOf(myStop) });
         db.close();
     }
     
