@@ -27,33 +27,26 @@ import com.yene.bustiming.R;
 
 
 public class BusStop extends ListActivity {
-	 public final static String BUS_MESSAGE = "com.yene.BUSNUMBER";
-	 public static final String BUS_DIRECTION = "com.yene.BUSDIRECTION";
-     public SingelBusStop  gerUrl = new SingelBusStop();
+	 public  final static String BUS_MESSAGE = "com.yene.BUSNUMBER";
+	 public  static final String BUS_DIRECTION = "com.yene.BUSDIRECTION";
+     public  SingelBusStop  gerUrl = new SingelBusStop();
      private ProgressDialog dialog;
-     DatabaseHandler db ;
-     ArrayList<String> item = new ArrayList<String>();
-     String busStopID,busStopName,direction,busList,toward;
-     Context context;
+     private DatabaseHandler db ;
+     private ArrayList<String> item = new ArrayList<String>();
+     private String busStopID,busStopName,direction,busList,toward;
+     private Context context;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
-		db = new DatabaseHandler(this);
-		
-		dialog = new ProgressDialog(this);
+		db 				= new DatabaseHandler(this);
+		dialog 			= new ProgressDialog(this);
+		context 		= getApplicationContext();
+		Intent intent 	= getIntent();
+		busStopID 		= intent.getStringExtra(MainActivity.BUS_NO_MESSAGE);
+		toward 			= intent.getStringExtra(MainActivity.TOWARD);
+		busList			= intent.getStringExtra(MainActivity.BUSLIST);
 		dialog.setMessage("Please wait loading...");
 		dialog.show();
-		
-		context = getApplicationContext();
-		Intent intent = getIntent();
-		int duration = Toast.LENGTH_SHORT;
-		busStopID = intent.getStringExtra(MainActivity.BUS_NO_MESSAGE);
-		toward = intent.getStringExtra(MainActivity.TOWARD);
-		busList= intent.getStringExtra(MainActivity.BUSLIST);
-		
-		Toast toast = Toast.makeText(context, "Class: BusStop "+busStopID, duration);
-		toast.show();
 		new DownloadFilesTask().execute();
 	}
 	@Override
@@ -66,32 +59,18 @@ public class BusStop extends ListActivity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 	    switch (item.getItemId()) {
 	        case R.id.save_stop:
-	        	 Toast.makeText(this,"Save This Bus Stop=" +busStopID +" Toward = "+toward +" Bus List : "+ busList , Toast.LENGTH_LONG).show();
+	        	 Toast.makeText(this,"Save Bus Stop , Toward = "+toward , Toast.LENGTH_LONG).show();
 	        	 db.addFavouritStop(busStopID,busStopName,toward,busList);
-	        	 System.out.print("--- Read all data from DB..\n");
-	        	 for( BusStopFile index : db.getAllFavourStop()){
-	        		 System.out.print(index.toString()+"\n");
-	        	 }
-	        	 
 	            return true;
 	        default:
 	            return super.onOptionsItemSelected(item);
 	    }
 	}
-	//protected void onListItemClick(CustomListAdapter l, View v, int position, long id) {
-	 //   String item = (String) getListAdapter().getItem(position);
-	  //  Toast.makeText(this, item + " selected", Toast.LENGTH_LONG).show();
-	    //db.addFavouritStop( new MyBusStopObject(BUS_MESSAGE,BUS_DIRECTION));
-	    //openBusStopList(item,busNumber);
-	 // }
+
 	public void openBusStopList (String direction, String busNumber){
-		Intent intent = new Intent(this, BusStopList.class);
-	    String search_term = direction+","+busNumber;
-	    Context context = getApplicationContext();
-		CharSequence text = search_term;
-		int duration = Toast.LENGTH_SHORT;
-		Toast toast = Toast.makeText(context, text, duration);
-		toast.show();
+		Intent intent 		= new Intent(this, BusStopList.class);
+	    String search_term 	= direction+","+busNumber;
+	
 	    intent.putExtra(BUS_DIRECTION, search_term);
 	 	startActivity(intent);
 	}

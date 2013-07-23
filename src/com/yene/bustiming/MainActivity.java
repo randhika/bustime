@@ -10,9 +10,10 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.os.Parcelable;
+
 
 import android.app.ListActivity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
@@ -38,24 +39,28 @@ public class MainActivity extends ListActivity implements LocationListener{
 	 private ReadFile bf;
 	 private LocationManager locationManager;
 	 private String provider;
+	 private ProgressDialog dialog;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		context = getApplicationContext();
 		super.onCreate(savedInstanceState);
-		cd = new ConnectionDetector(context);
-		isConnected = cd.isConnectingToInternet();
-		bf= new ReadFile();
-		InputStream is = this.getResources().openRawResource(R.drawable.busstop);
+		context 			= getApplicationContext();
+		cd 					= new ConnectionDetector(context);
+		bf					= new ReadFile();
+		Criteria criteria 	= new Criteria();
+		dialog 				= new ProgressDialog(this);
+		
+		isConnected 		= cd.isConnectingToInternet();
+		InputStream is 		= this.getResources().openRawResource(R.drawable.busstop);
+		locationManager 	= (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+		
+		provider 			= locationManager.getBestProvider(criteria, true);
+		Location location 	= locationManager.getLastKnownLocation(provider);
+		
+		dialog.setMessage("Please wait loading...");
+		dialog.show();
 		bf.readName(is);
-		 // Get the location manager
-	    locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-	    // Define the criteria how to select the locatioin provider -> use
-	    // default
-	    Criteria criteria = new Criteria();
-	    provider = locationManager.getBestProvider(criteria, true);
-	    Location location = locationManager.getLastKnownLocation(provider);
-	    // Initialize the location fields
+		 
 	    if (location != null) {
 	      System.out.println("Provider " + provider + " has been selected.");
 	      onLocationChanged(location);
@@ -68,6 +73,7 @@ public class MainActivity extends ListActivity implements LocationListener{
 		bsf.clear();
 		bsf = bf.findBusStop( lat,lng);
 		setListAdapter(new CustomListBusStops(this, bsf));
+		dialog.dismiss();
 	}
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -77,16 +83,21 @@ public class MainActivity extends ListActivity implements LocationListener{
 	}
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		Toast.makeText(this,"Loading Map...", Toast.LENGTH_LONG).show();
+		
 	    switch (item.getItemId()) {
 	        case R.id.mapview:
+	        	Toast.makeText(this,"Loading Map...", Toast.LENGTH_LONG).show();
 	        	 Intent intent = new Intent(this, MapView.class);
 	        	 startActivity(intent);
 	        	 return true;
 	        case R.id.mystop:
-	        	Toast.makeText(this,"Loading my favourit...", Toast.LENGTH_LONG).show();
+	        	Toast.makeText(this,"Loading  favourit...", Toast.LENGTH_LONG).show();
 	        	Intent intent2 = new Intent(this, FavouritStop.class);
 	        	startActivity(intent2);
+	        	return true;
+	        case R.id.search:
+	        	Toast.makeText(this,"Loading  favourit...", Toast.LENGTH_LONG).show();
+	        	cd.showAlertDialog(MainActivity.this, "Coming Soon...", "Search via BUS, POSTCODE , BUS STOP ID.", false);
 	        	return true;
 	        default:
 	            return super.onOptionsItemSelected(item);
@@ -104,10 +115,7 @@ public class MainActivity extends ListActivity implements LocationListener{
 	    //EditText editText = (EditText) findViewById(R.id.busN);
 	    //String search_term = editText.getText().toString();
 	    if(search_term.length()<1 || search_term.length()>5 && isConnected ){
-			CharSequence text = "Please Enter Bus Number";
-			int duration = Toast.LENGTH_SHORT;
-			Toast toast = Toast.makeText(context, text, duration);
-			toast.show();
+			
 	    }else if(!isConnected){	
 			cd.showAlertDialog(MainActivity.this, "No Connection", "Please enable your internet connection.", false);
 	    }else if(isConnected){
@@ -119,12 +127,10 @@ public class MainActivity extends ListActivity implements LocationListener{
 	}
 	
 	public void addFavourit (View v){
-		//Toast.makeText(getBaseContext(), "position:", Toast.LENGTH_LONG).show();
 		 final int position = getListView().getPositionForView((RelativeLayout)v.getParent());
 		 String stopID = bf.eachStop().get(position).stopId;
 		 String toward = bf.eachStop().get(position).toward;
 		 String bus = bf.eachStop().get(position).bus;
-		 Toast.makeText(getBaseContext(), position+ "= position:"+bf.eachStop().get(position).stopId, Toast.LENGTH_LONG).show();
 		 sendMessage(stopID,toward,bus);
 	}
 	@Override
