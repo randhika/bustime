@@ -8,6 +8,8 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import android.util.Log;
+
 
 
  
@@ -103,7 +105,7 @@ public class ReadFile  {
 	}
 	
 	public ArrayList<BusStopFile> findBusStop(double nearLat, double nearLng){
-		System.out.println("-------------------: ");
+		System.out.println("-------------------: \n");
 		System.out.println("lat = "+nearLat  +" lng = " +nearLng );
 		int counts = 0;
 		
@@ -113,13 +115,16 @@ public class ReadFile  {
 			lat 		= Double.parseDouble(""+item.stopLat);
 			lng 		= Double.parseDouble(""+item.stopLng);
 			double d 	= distance(nearLat,nearLng,lat,lng);
-			//System.out.println("Distnace ="+d );
-			if(d < 0.5){				//System.out.print("\n\n["+item.toString()+"]");
+			
+			
+			if(d < 0.5){
+				System.out.println("Distnace ="+d );
 				nearby.add(item);
 				counts++;
 				}
 			}
-		System.out.print("\nNumber of near stop: "+counts);
+		System.out.println("-------------------: \n");
+		
 		return nearby;	
 	}
 	

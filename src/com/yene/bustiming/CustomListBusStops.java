@@ -51,7 +51,7 @@ public class CustomListBusStops extends BaseAdapter {
         
         
         holder.stopName.setText(""+busStopList.get(position).toward);
-        holder.busNumber.setText(busStopList.get(position).bus);
+        holder.busNumber.setText(busStopList.get(position).bus.trim());
         holder.toward.setText(busStopList.get(position).stopName);
  
         return convertView;

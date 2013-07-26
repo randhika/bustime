@@ -85,11 +85,7 @@ public class MainActivity extends ListActivity implements LocationListener{
 	public boolean onOptionsItemSelected(MenuItem item) {
 		
 	    switch (item.getItemId()) {
-	        case R.id.mapview:
-	        	Toast.makeText(this,"Loading Map...", Toast.LENGTH_LONG).show();
-	        	 Intent intent = new Intent(this, MapView.class);
-	        	 startActivity(intent);
-	        	 return true;
+	       
 	        case R.id.mystop:
 	        	Toast.makeText(this,"Loading  favourit...", Toast.LENGTH_LONG).show();
 	        	Intent intent2 = new Intent(this, FavouritStop.class);
@@ -99,6 +95,7 @@ public class MainActivity extends ListActivity implements LocationListener{
 	        	Toast.makeText(this,"Loading  favourit...", Toast.LENGTH_LONG).show();
 	        	cd.showAlertDialog(MainActivity.this, "Coming Soon...", "Search via BUS, POSTCODE , BUS STOP ID.", false);
 	        	return true;
+	 
 	        default:
 	            return super.onOptionsItemSelected(item);
 	    }
