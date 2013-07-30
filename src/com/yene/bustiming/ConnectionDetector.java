@@ -52,10 +52,8 @@ public class ConnectionDetector {
 				dialog.cancel();
 			}
 		});
-		
 		// create alert dialog
 		AlertDialog alertDialog = alertDialogBuilder.create();
-
 		// show it
 		alertDialog.show();
     }

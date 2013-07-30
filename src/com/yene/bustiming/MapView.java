@@ -26,6 +26,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -46,7 +47,7 @@ public class MapView  extends FragmentActivity  implements LocationListener ,OnI
      * Note that this may be null if the Google Play services APK is not available.
      */
     private GoogleMap mMap;
-    Marker marker;
+    MarkerOptions markerBusStop, user;
     private ReadFile bf;
     private LocationManager locationManager;
 	private String provider;
@@ -54,8 +55,9 @@ public class MapView  extends FragmentActivity  implements LocationListener ,OnI
 	private ConnectionDetector cd;
 	private Context context;
 	private ProgressDialog dialog;
-	
+	private ArrayList<Marker> marker = new ArrayList <Marker> ();
 	private ArrayList<BusStopFile> busStopLocation = new ArrayList<BusStopFile> ();
+	private Criteria criteria;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,9 +75,13 @@ public class MapView  extends FragmentActivity  implements LocationListener ,OnI
 	    locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 	    // Define the criteria how to select the locatioin provider -> use
 	    // default
-	    Criteria criteria = new Criteria();
+	    criteria = new Criteria();
 	    provider 		  = locationManager.getBestProvider(criteria, true);	  
-	    locationManager.requestLocationUpdates(provider, 1000, 100, this);
+	    locationManager.requestLocationUpdates(provider, 15000, 100, this);
+	    Location location = locationManager.getLastKnownLocation(provider);
+	    if(location.hasAltitude()){
+	    	onLocationChanged(location);
+	    }
 	    new DownloadFilesTask().execute();
 	    
     }
@@ -83,7 +89,7 @@ public class MapView  extends FragmentActivity  implements LocationListener ,OnI
     @Override
     protected void onResume() {
         super.onResume();
-        setUpMapIfNeeded();
+        //setUpMapIfNeeded();
     }
 
     /**
@@ -112,7 +118,8 @@ public class MapView  extends FragmentActivity  implements LocationListener ,OnI
 
     private void setUpMapIfNeeded() {
         // Do a null check to confirm that we have not already instantiated the map.
-    	Log.d(TAG,"MapView setUpMapIfNeeded : "+busStopLocation.size());    	
+    	Log.d(TAG,"MapView setUpMapIfNeeded : "+busStopLocation.size());
+    		
         if (mMap == null) {
             // Try to obtain the map from the SupportMapFragment.
             mMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map)).getMap();
@@ -133,16 +140,20 @@ public class MapView  extends FragmentActivity  implements LocationListener ,OnI
      * <p>
      * This should only be called once and when we are sure that {@link #mMap} is not null.
      */
-    private void setUpMap() {    
-    	
+    private void setUpMap() {
     	Log.d(TAG,"MapView setUpMap : " + busStopLocation.size());
+    	markerBusStop 	= new MarkerOptions();
+    	Marker m;
     	for(BusStopFile item : busStopLocation){
-    		Double lat = Double.parseDouble(item.getStopLat());
-    		Double lng = Double.parseDouble(item.getStopLng());
+    		
+    		Double lat 		= Double.parseDouble(item.getStopLat());
+    		Double lng 		= Double.parseDouble(item.getStopLng());
     		
     		String toward = item.toward;
     		System.out.print(item.toward);
-    		marker = mMap.addMarker(new MarkerOptions().position(new LatLng(lat, lng)).title("Toward :"+toward).snippet(item.bus).icon(BitmapDescriptorFactory.fromResource(R.drawable.bus)));
+    		m = mMap.addMarker(markerBusStop.position(new LatLng(lat, lng)).title("Toward :"+toward).snippet(item.bus).icon(BitmapDescriptorFactory.fromResource(R.drawable.bus)));
+    		marker.add(m);
+    		
     	}
     	
         mMap.setTrafficEnabled(true);
@@ -155,20 +166,27 @@ public class MapView  extends FragmentActivity  implements LocationListener ,OnI
 
 	@Override
 	public void onLocationChanged(Location location) {
+
+		for (int index = 0 ; index < marker.size(); index++){
+   		 	
+   		 	Log.d("onLocationChanged() title: ", marker.get(index).getId());
+   		 	marker.get(index).hideInfoWindow();
+   		 	System.out.print("\nonLocationChanged() Size: ");
+   		 	
+   		 	
+   		}
 		
-		if(mMap != null){
-			mMap.clear();
-		}
-		
+		if(mMap != null){mMap.clear();}
+		user = new MarkerOptions();		
 		lat = location.getLatitude();
 		lng = location.getLongitude();
 		System.out.print("MapView onLocationChanged(): "+lat+" = "+ lng);
-		mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lat, lng), 15));
-		marker = mMap.addMarker(new MarkerOptions().position(new LatLng(lat, lng)));
-		mMap.addCircle(new CircleOptions().center(new LatLng(lat, lng)).radius(550).strokeColor(0x40336699).fillColor(0x20336699).strokeWidth(4));
-		
-		 if (mMap != null && busStopLocation.size() > 0) {
-			 getGpsCoor(lat,lng);
+		if (mMap != null && busStopLocation.size() > 0) {
+			
+			mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lat, lng), 15));
+			mMap.addMarker(user.position(new LatLng(lat, lng)));
+			mMap.addCircle(new CircleOptions().center(new LatLng(lat, lng)).radius(550).strokeColor(0x40336699).fillColor(0x20336699).strokeWidth(4));
+			getGpsCoor(lat,lng);
 		 }
 	}
 
@@ -260,7 +278,14 @@ public class MapView  extends FragmentActivity  implements LocationListener ,OnI
 	        	//cd.showAlertDialog(MapView.this, "Coming Soon...", "Search via BUS, POSTCODE , BUS STOP ID.", false);
 	        	return true;
 	        case R.id.reload:
-	        	Toast.makeText(this,"Loading Current Location...", Toast.LENGTH_LONG).show();
+	        	Toast.makeText(this,"Loading Current Location...: "+provider, Toast.LENGTH_LONG).show();
+	        	 provider 		  = locationManager.getBestProvider(criteria, true);	
+	        	if(!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)){
+	        	       Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+	        	       startActivity(intent);
+	        	      
+	        	}
+	        	locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 15000, 100, this);
 	        	Location newLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 	        	if(newLocation !=null){
 	        		onLocationChanged(newLocation);
@@ -274,15 +299,15 @@ public class MapView  extends FragmentActivity  implements LocationListener ,OnI
 		
 		
 		protected void onProgressUpdate(Integer... progress) {
-			
 			 Log.d(TAG, "Show Message");
 			 System.out.print(TAG);
 	     }
 	     protected void onPostExecute(Long result) {
-	    	
 	    	getGpsCoor(lat,lng);
+	    	mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lat, lng), 15));
+			mMap.addMarker(user.position(new LatLng(lat, lng)));
+			mMap.addCircle(new CircleOptions().center(new LatLng(lat, lng)).radius(550).strokeColor(0x40336699).fillColor(0x20336699).strokeWidth(4));
 	    	Log.d(TAG,"onPostExecute");
-	    	
 	     }
 
 		@Override
