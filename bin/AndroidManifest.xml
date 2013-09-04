@@ -59,6 +59,26 @@
 	            android:name="android.support.PARENT_ACTIVITY"
 	            android:value="com.yene.bustiming.BusStopList" />
     	</activity>
+    	
+    	<activity
+        	android:name="com.yene.bustiming.LaunchpadSectionFragment"
+        	android:label="@string/select_bus_stop"
+        	android:parentActivityName="com.yene.bustiming.MainActivityOther" >
+	        <meta-data
+	            android:name="android.support.PARENT_ACTIVITY"
+	            android:value="com.yene.bustiming.LaunchpadSectionFragment" />
+    	</activity>
+    	
+    	<activity
+        	android:name="com.yene.bustiming.CollectionDemoActivity"
+        	android:label="@string/select_bus_stop"
+        	android:parentActivityName="com.yene.bustiming.MainActivityOther" >
+	        <meta-data
+	            android:name="android.support.PARENT_ACTIVITY"
+	            android:value="com.yene.bustiming.CollectionDemoActivity" />
+    	</activity>
+    	
+    	
     	<activity 
     	    android:theme="@style/AppBaseTheme" 
     	    android:name="com.yene.bustiming.FavouritStop" 

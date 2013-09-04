@@ -124,7 +124,7 @@ public class MainActivityOther extends FragmentActivity implements ActionBar.Tab
                     return new LaunchpadSectionFragment();
 
                 default:
-                    // The other sections of the app are dummy placeholders.
+                   
                     Fragment fragment = new DummySectionFragment();
                     Bundle args = new Bundle();
                     args.putInt(DummySectionFragment.ARG_SECTION_NUMBER, i + 1);
