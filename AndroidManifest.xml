@@ -36,7 +36,7 @@
         	android:label="@string/select_direction" >      
     	</activity>    	
          <activity
-        	android:name="com.yene.bustiming.MapView"
+        	android:name="com.yene.bustiming.MainActivityOther"
         	android:label="@string/select_direction" > 
         	 <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
