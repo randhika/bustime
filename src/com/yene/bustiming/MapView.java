@@ -17,6 +17,9 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.yene.bustiming.R;
 
 
+import android.app.ActionBar;
+import android.app.ActionBar.Tab;
+import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -28,16 +31,19 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.view.ViewPager;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Toast;
 
 
 
  
-public class MapView  extends FragmentActivity  implements LocationListener ,OnInfoWindowClickListener, InfoWindowAdapter{
+public class MapView  extends FragmentActivity  implements LocationListener ,OnInfoWindowClickListener, InfoWindowAdapter,ActionBar.TabListener{
     private static final String TAG 			= "MapView";
     public final static String BUS_NO_MESSAGE 	= "com.yene.BUSNUMBER";
     public final static String TOWARD 			= "com.yene.TOWARD";
@@ -58,10 +64,46 @@ public class MapView  extends FragmentActivity  implements LocationListener ,OnI
 	private ArrayList<Marker> marker = new ArrayList <Marker> ();
 	private ArrayList<BusStopFile> busStopLocation = new ArrayList<BusStopFile> ();
 	private Criteria criteria;
+	private AppSectionsPagerAdapter mAppSectionsPagerAdapter;
+    private ViewPager mViewPager;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_map);
+        setContentView(R.layout.activity_main_other);
+        mAppSectionsPagerAdapter = new AppSectionsPagerAdapter(getSupportFragmentManager());
+        
+        final ActionBar actionBar = getActionBar();
+        
+
+        // Specify that the Home/Up button should not be enabled, since there is no hierarchical
+        // parent.
+        actionBar.setHomeButtonEnabled(false);
+
+        // Specify that we will be displaying tabs in the action bar.
+        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+
+        // Set up the ViewPager, attaching the adapter and setting up a listener for when the
+        // user swipes between sections.
+        mViewPager = (ViewPager) findViewById(R.id.pager);
+        mViewPager.setAdapter(mAppSectionsPagerAdapter);
+        mViewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+            @Override
+            public void onPageSelected(int position) {
+                // When swiping between different app sections, select the corresponding tab.
+                // We can also use ActionBar.Tab#select() to do this if we have a reference to the
+                // Tab.
+                actionBar.setSelectedNavigationItem(position);
+            }
+        });
+
+        // For each of the sections in the app, add a tab to the action bar.
+        for (int i = 0; i < mAppSectionsPagerAdapter.getCount(); i++) {
+            // Create a tab with text corresponding to the page title defined by the adapter.
+            // Also specify this Activity object, which implements the TabListener interface, as the
+            // listener for when this tab is selected.
+            actionBar.addTab(actionBar.newTab().setText(mAppSectionsPagerAdapter.getPageTitle(i)).setTabListener(this));
+        }
+        
         context 	= getApplicationContext();
         cd 			= new ConnectionDetector(context);
 		isConnected = cd.isConnectingToInternet();
@@ -85,6 +127,8 @@ public class MapView  extends FragmentActivity  implements LocationListener ,OnI
 	    new DownloadFilesTask().execute();
 	    
     }
+    
+ 
 
     @Override
     protected void onResume() {
@@ -122,7 +166,7 @@ public class MapView  extends FragmentActivity  implements LocationListener ,OnI
     		
         if (mMap == null) {
             // Try to obtain the map from the SupportMapFragment.
-            mMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map)).getMap();
+            mMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentByTag("map")).getMap();
         }
             // Check if we were successful in obtaining the map.
             if (mMap != null && busStopLocation != null) {
@@ -210,13 +254,13 @@ public class MapView  extends FragmentActivity  implements LocationListener ,OnI
 
 	@Override
 	public void onInfoWindowClick(Marker marker) {
-		 //String mID 	=  marker.getId().substring(1);
-		 //int index 		=  Integer.parseInt(mID);
-		 Toast.makeText(this,"Loading Current Location..."+marker.getId(), Toast.LENGTH_LONG).show();
-		 //String stopId  = busStopLocation.get(index).stopId;
-		// String toward 	= busStopLocation.get(index).toward;
-		// String bus 	= busStopLocation.get(index).bus;
-		 //sendMessage(stopId,toward,bus);
+		 String mID 	=  marker.getId().substring(1);
+		 int index 	=  Integer.parseInt(mID);
+		 Toast.makeText(this,"Loading Current map..."+marker.getId(), Toast.LENGTH_LONG).show();
+		 String stopId  = busStopLocation.get(index).stopId;
+		 String toward 	= busStopLocation.get(index).toward;
+		 String bus 	= busStopLocation.get(index).bus;
+		 sendMessage(stopId,toward,bus);
 		
 	}
 
@@ -318,6 +362,27 @@ public class MapView  extends FragmentActivity  implements LocationListener ,OnI
 			return null;
 		}
 	
+	}
+	@Override
+	public void onTabReselected(Tab tab, FragmentTransaction ft) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+
+	@Override
+	public void onTabSelected(Tab tab, FragmentTransaction ft) {
+		   mViewPager.setCurrentItem(tab.getPosition());
+		
+	}
+
+
+
+	@Override
+	public void onTabUnselected(Tab tab, FragmentTransaction ft) {
+		// TODO Auto-generated method stub
+		
 	}
 
 	
