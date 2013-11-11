@@ -2,6 +2,8 @@ package com.yene.bustiming;
 
 import java.util.ArrayList;
 
+import com.yene.db.DatabaseHandler;
+
 import android.app.ListActivity;
 import android.content.Context;
 import android.content.Intent;

@@ -1,4 +1,7 @@
-package com.yene.bustiming;
+package com.yene.fragment;
+
+import com.yene.bustiming.R;
+import com.yene.bustiming.R.layout;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;

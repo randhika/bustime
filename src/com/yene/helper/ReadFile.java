@@ -1,4 +1,4 @@
-package com.yene.bustiming;
+package com.yene.helper;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -7,6 +7,8 @@ import java.io.InputStreamReader;
 
 import java.util.ArrayList;
 import java.util.Collections;
+
+import com.yene.bustiming.BusStopFile;
 
 import android.util.Log;
 
@@ -17,7 +19,7 @@ public class ReadFile  {
 	ArrayList <BusStopFile> busCollection = new ArrayList<BusStopFile>();
 	ArrayList <BusStopFile> nearby = new ArrayList<BusStopFile>();
 	static int count =0;
-	ReadFile() {
+	public ReadFile() {
 	      System.out.println("-------------------: ");
 	      System.out.println("Object BufferedReaderExample: ");
 	   }
@@ -112,8 +114,8 @@ public class ReadFile  {
 		for(BusStopFile item :busCollection ){
 			
 			double lat ,lng;
-			lat 		= Double.parseDouble(""+item.stopLat);
-			lng 		= Double.parseDouble(""+item.stopLng);
+			lat 		= Double.parseDouble(""+item.getStopLat());
+			lng 		= Double.parseDouble(""+item.getStopLng());
 			double d 	= distance(nearLat,nearLng,lat,lng);
 			
 			

@@ -1,4 +1,4 @@
-package com.yene.bustiming;
+package com.yene.custom_list;
 
 import java.util.ArrayList;
 
@@ -10,7 +10,10 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import com.yene.bustiming.BusStopObject;
 import com.yene.bustiming.R;
+import com.yene.bustiming.R.id;
+import com.yene.bustiming.R.layout;
 public class CustomListAdapter extends BaseAdapter {
 	 
     private static final String TAG = "CUSTOMLISTADAPTER";

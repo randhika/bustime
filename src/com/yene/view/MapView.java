@@ -1,4 +1,4 @@
-package com.yene.bustiming;
+package com.yene.view;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
@@ -14,7 +14,17 @@ import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.yene.bustiming.AppSectionsPagerAdapter;
+import com.yene.bustiming.BusStop;
+import com.yene.bustiming.BusStopFile;
+import com.yene.bustiming.ConnectionDetector;
+import com.yene.bustiming.FavouritStop;
 import com.yene.bustiming.R;
+import com.yene.bustiming.R.drawable;
+import com.yene.bustiming.R.id;
+import com.yene.bustiming.R.layout;
+import com.yene.bustiming.R.menu;
+import com.yene.helper.ReadFile;
 
 
 import android.app.ActionBar;

@@ -2,6 +2,10 @@ package com.yene.bustiming;
 
 import java.net.URL;
 import java.util.ArrayList;
+
+import com.yene.helper.JSONParser;
+import com.yene.view.MainActivity;
+
 import android.os.AsyncTask;
 import android.util.Log;
 public class RequestBusStop extends AsyncTask<URL, Integer, Long> {

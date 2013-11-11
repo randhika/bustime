@@ -21,6 +21,8 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.yene.bustiming.R;
+import com.yene.helper.JSONParser;
+import com.yene.view.MainActivity;
 
 public class Direction extends ListActivity {
 	 public final static String BUS_MESSAGE = "com.yene.BUSNUMBER";

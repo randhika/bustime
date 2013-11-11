@@ -1,7 +1,10 @@
-package com.yene.bustiming;
+package com.yene.db;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import com.yene.bustiming.BusStopFile;
+import com.yene.bustiming.MyBusStopObject;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -71,7 +74,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
      */
  
     // Adding new stop
-    void addFavouritStop(String id, String name , String toward , String busList) {
+    public void addFavouritStop(String id, String name , String toward , String busList) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(KEY_BUS_STOP_ID, id);

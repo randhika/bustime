@@ -2,6 +2,8 @@ package com.yene.bustiming;
 
 
 
+import com.yene.view.MainActivity;
+
 import android.content.Context;
 import android.location.Location;
 import android.location.LocationListener;

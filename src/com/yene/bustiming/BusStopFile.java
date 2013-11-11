@@ -7,7 +7,12 @@ import android.os.Parcelable;
 
 public class BusStopFile  implements Comparable<BusStopFile>{ 
 
-	String stopId,stopName,stopLat,stopLng,bus,toward;
+	public String stopId;
+	public String stopName;
+	String stopLat;
+	String stopLng;
+	public String bus;
+	public String toward;
 	private int mData;
 	
 	public BusStopFile(String id, String name , String lat ,String lng, String bus,String toward){

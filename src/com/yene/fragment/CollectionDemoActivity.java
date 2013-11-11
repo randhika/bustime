@@ -14,7 +14,12 @@
  * limitations under the License.
  */
 
-package com.yene.bustiming;
+package com.yene.fragment;
+
+import com.yene.bustiming.R;
+import com.yene.bustiming.R.id;
+import com.yene.bustiming.R.layout;
+import com.yene.view.MainActivity;
 
 import android.app.ActionBar;
 import android.content.Intent;

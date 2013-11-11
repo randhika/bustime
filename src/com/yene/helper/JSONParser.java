@@ -1,4 +1,4 @@
-package com.yene.bustiming;
+package com.yene.helper;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -15,6 +15,8 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import com.yene.bustiming.BusStopObject;
  
 import android.util.Log;
  

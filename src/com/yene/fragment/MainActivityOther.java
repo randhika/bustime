@@ -1,4 +1,4 @@
-package com.yene.bustiming;
+package com.yene.fragment;
 /*
  * Copyright 2012 The Android Open Source Project
  *
@@ -17,6 +17,12 @@ package com.yene.bustiming;
 
 
 
+
+import com.yene.bustiming.AppSectionsPagerAdapter;
+import com.yene.bustiming.R;
+import com.yene.bustiming.R.id;
+import com.yene.bustiming.R.layout;
+import com.yene.view.MapView;
 
 import android.app.ActionBar;
 import android.app.FragmentTransaction;
