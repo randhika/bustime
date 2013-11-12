@@ -14,7 +14,6 @@ import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.yene.bustiming.AppSectionsPagerAdapter;
 import com.yene.bustiming.BusStop;
 import com.yene.bustiming.BusStopFile;
 import com.yene.bustiming.ConnectionDetector;
@@ -24,6 +23,7 @@ import com.yene.bustiming.R.drawable;
 import com.yene.bustiming.R.id;
 import com.yene.bustiming.R.layout;
 import com.yene.bustiming.R.menu;
+import com.yene.fragment.AppSectionsPagerAdapter;
 import com.yene.helper.ReadFile;
 
 
@@ -183,7 +183,7 @@ public class MapView  extends FragmentActivity  implements LocationListener ,OnI
             	Log.d(TAG,"MapView setUpMapIfNeeded : NOT NULL");
                 setUpMap();
             }else{
-            	Log.d(TAG,"MapView setUpMapIfNeeded :  NULL");
+            	Log.d(TAG,"MapView NULL : BUS NULL");
             }
         
     }
@@ -237,7 +237,7 @@ public class MapView  extends FragmentActivity  implements LocationListener ,OnI
 		System.out.print("MapView onLocationChanged(): "+lat+" = "+ lng);
 		if (mMap != null && busStopLocation.size() > 0) {
 			
-			mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lat, lng), 15));
+			mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lat, lng), 15));
 			mMap.addMarker(user.position(new LatLng(lat, lng)));
 			mMap.addCircle(new CircleOptions().center(new LatLng(lat, lng)).radius(550).strokeColor(0x40336699).fillColor(0x20336699).strokeWidth(4));
 			getGpsCoor(lat,lng);
@@ -358,7 +358,7 @@ public class MapView  extends FragmentActivity  implements LocationListener ,OnI
 	     }
 	     protected void onPostExecute(Long result) {
 	    	getGpsCoor(lat,lng);
-	    	mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lat, lng), 15));
+	    	mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lat, lng), 15));
 			mMap.addMarker(user.position(new LatLng(lat, lng)));
 			mMap.addCircle(new CircleOptions().center(new LatLng(lat, lng)).radius(550).strokeColor(0x40336699).fillColor(0x20336699).strokeWidth(4));
 	    	Log.d(TAG,"onPostExecute");

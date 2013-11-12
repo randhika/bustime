@@ -18,7 +18,6 @@ package com.yene.fragment;
 
 
 
-import com.yene.bustiming.AppSectionsPagerAdapter;
 import com.yene.bustiming.R;
 import com.yene.bustiming.R.id;
 import com.yene.bustiming.R.layout;
@@ -106,16 +105,6 @@ public class MainActivityOther extends FragmentActivity implements ActionBar.Tab
     @Override
     public void onTabReselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
     }
-    public void demoInside( View v){
-		Intent intent = new Intent(this, MapView.class);
-		startActivity(intent);
-      }
-	public void demoOutside( View v){
-		Intent externalActivityIntent = new Intent(Intent.ACTION_PICK);
-		externalActivityIntent.setType("image/*");
-		externalActivityIntent.addFlags(
-		Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
-		startActivity(externalActivityIntent);
-      }
-
+   
+	
 }

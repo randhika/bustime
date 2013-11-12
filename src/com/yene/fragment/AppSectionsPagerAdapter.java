@@ -1,7 +1,5 @@
-package com.yene.bustiming;
+package com.yene.fragment;
 
-import com.yene.fragment.DummySectionFragment;
-import com.yene.fragment.LaunchpadSectionFragment;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -45,7 +43,10 @@ public class AppSectionsPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public CharSequence getPageTitle(int position) {
-        return "Map view " + (position);
+    	
+    	String Map[] = {"Map","List"};
+    	
+        return ""+Map[position];
     }
 
 	@Override
