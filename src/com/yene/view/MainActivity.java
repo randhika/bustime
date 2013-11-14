@@ -82,7 +82,8 @@ public class MainActivity extends FragmentActivity implements LocationListener{
 	public void getGpsCoor(double lat , double lng){
 		bsf.clear();
 		bsf = bf.findBusStop( lat,lng);
-		setListAdapter(new CustomListBusStops(this, bsf));
+		//setContentView(new CustomListBusStops(this, bsf));
+		 setContentView(R.layout.activity_main_other);
 		dialog.dismiss();
 	}
 	@Override

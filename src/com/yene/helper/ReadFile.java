@@ -120,12 +120,12 @@ public class ReadFile  {
 			
 			
 			if(d < 0.5){
-				System.out.println("Distnace ="+d );
+				Log.e("Distnace: ","Distnace ="+d );
 				nearby.add(item);
 				counts++;
 				}
 			}
-		System.out.println("-------------------: \n");
+		Log.e("Done Near by top: ","-------------------: \n"+nearby.size());
 		
 		return nearby;	
 	}

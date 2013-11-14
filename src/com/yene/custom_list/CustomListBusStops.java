@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.yene.bustiming.BusStopFile;
@@ -20,12 +21,21 @@ public class CustomListBusStops extends BaseAdapter {
     private static final String TAG = "CUSTOMLISTADAPTER";
 	private ArrayList<BusStopFile> busStopList;
     private LayoutInflater layoutInflater;
+    private View listview;
  
     public CustomListBusStops(Context context, ArrayList<BusStopFile> busStopList) {
         this.busStopList = busStopList;
         layoutInflater = LayoutInflater.from(context);
     }
-    @Override
+    public CustomListBusStops(com.yene.fragment.ListView listView, ArrayList<BusStopFile> busStopList) {
+		// TODO Auto-generated constructor stub
+    	 this.busStopList = busStopList;
+         layoutInflater = LayoutInflater.from(listView.getActivity());
+         System.out.print(TAG);
+	}
+
+	
+	@Override
     public int getCount() {
         return busStopList.size();
     }
@@ -37,7 +47,7 @@ public class CustomListBusStops extends BaseAdapter {
     public long getItemId(int position) {
         return position;
     }
- 
+    @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder holder;
         if (convertView == null) {
@@ -56,11 +66,20 @@ public class CustomListBusStops extends BaseAdapter {
         holder.stopName.setText(""+busStopList.get(position).toward);
         holder.busNumber.setText(busStopList.get(position).bus.trim());
         holder.toward.setText(busStopList.get(position).stopName);
- 
+        setListview(convertView);
         return convertView;
     }
  
-    public class ViewHolder {
+    public View getListview() {
+		return listview;
+	}
+
+
+	public void setListview(View listview) {
+		this.listview = listview;
+	}
+
+	public class ViewHolder {
         TextView stopName;
         TextView busNumber;
         TextView toward;

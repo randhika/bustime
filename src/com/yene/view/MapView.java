@@ -116,21 +116,26 @@ public class MapView  extends FragmentActivity  implements LocationListener ,OnI
         
         context 	= getApplicationContext();
         cd 			= new ConnectionDetector(context);
-		isConnected = cd.isConnectingToInternet();
-		
+		isConnected = cd.isConnectingToInternet();		
 		dialog 		= new ProgressDialog(this);
+		
 		dialog.setMessage("Please wait loading...");
 		dialog.show();
 		
         
 		 // Get the location manager
 	    locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+	    
 	    // Define the criteria how to select the locatioin provider -> use
 	    // default
 	    criteria = new Criteria();
 	    provider 		  = locationManager.getBestProvider(criteria, true);	  
 	    locationManager.requestLocationUpdates(provider, 15000, 100, this);
 	    Location location = locationManager.getLastKnownLocation(provider);
+	    
+	    lat = location.getLatitude();
+	    lng = location.getLongitude();
+	    Log.e("getLatitude"+ location.getLatitude(),"getLongitude"+ location.getLongitude());
 	    if(location.hasAltitude()){
 	    	onLocationChanged(location);
 	    }
@@ -204,7 +209,7 @@ public class MapView  extends FragmentActivity  implements LocationListener ,OnI
     		Double lng 		= Double.parseDouble(item.getStopLng());
     		
     		String toward = item.toward;
-    		System.out.print(item.toward);
+    		//System.out.print(item.toward);
     		m = mMap.addMarker(markerBusStop.position(new LatLng(lat, lng)).title("Toward :"+toward).snippet(item.bus).icon(BitmapDescriptorFactory.fromResource(R.drawable.bus)));
     		marker.add(m);
     		
@@ -225,7 +230,7 @@ public class MapView  extends FragmentActivity  implements LocationListener ,OnI
    		 	
    		 	Log.d("onLocationChanged() title: ", marker.get(index).getId());
    		 	marker.get(index).hideInfoWindow();
-   		 	System.out.print("\nonLocationChanged() Size: ");
+   		 	//System.out.print("\nonLocationChanged() Size: ");
    		 	
    		 	
    		}
@@ -234,7 +239,7 @@ public class MapView  extends FragmentActivity  implements LocationListener ,OnI
 		user = new MarkerOptions();		
 		lat = location.getLatitude();
 		lng = location.getLongitude();
-		System.out.print("MapView onLocationChanged(): "+lat+" = "+ lng);
+		//System.out.print("MapView onLocationChanged(): "+lat+" = "+ lng);
 		if (mMap != null && busStopLocation.size() > 0) {
 			
 			mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lat, lng), 15));
@@ -329,7 +334,7 @@ public class MapView  extends FragmentActivity  implements LocationListener ,OnI
 	        	onLocationChanged(location);
 	        	getGpsCoor(lat,lng);
 	        	//Toast.makeText(this,"Loading  favourit...", Toast.LENGTH_LONG).show();
-	        	//cd.showAlertDialog(MapView.this, "Coming Soon...", "Search via BUS, POSTCODE , BUS STOP ID.", false);
+	        	cd.showAlertDialog(MapView.this, "Coming Soon...", "Search via BUS, POSTCODE , BUS STOP ID.", false);
 	        	return true;
 	        case R.id.reload:
 	        	Toast.makeText(this,"Loading Current Location...: "+provider, Toast.LENGTH_LONG).show();
@@ -354,11 +359,13 @@ public class MapView  extends FragmentActivity  implements LocationListener ,OnI
 		
 		protected void onProgressUpdate(Integer... progress) {
 			 Log.d(TAG, "Show Message");
-			 System.out.print(TAG);
+			 //System.out.print(TAG);
 	     }
 	     protected void onPostExecute(Long result) {
 	    	getGpsCoor(lat,lng);
 	    	mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lat, lng), 15));
+	    	Log.e("lat: "+lat,"lng"+ lng);
+	      	user = new MarkerOptions();	
 			mMap.addMarker(user.position(new LatLng(lat, lng)));
 			mMap.addCircle(new CircleOptions().center(new LatLng(lat, lng)).radius(550).strokeColor(0x40336699).fillColor(0x20336699).strokeWidth(4));
 	    	Log.d(TAG,"onPostExecute");
