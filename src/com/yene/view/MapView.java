@@ -294,7 +294,7 @@ public class MapView  extends FragmentActivity  implements LocationListener ,OnI
     		
     		String toward = item.toward;
     		//System.out.print(item.toward);
-    		m = mMap.addMarker(markerBusStop.position(new LatLng(lat, lng)).title("Toward :"+toward).snippet(item.bus).icon(BitmapDescriptorFactory.fromResource(R.drawable.bus)));
+    		m = mMap.addMarker(markerBusStop.position(new LatLng(lat, lng)).title("Toward :"+toward).snippet(item.bus +"  {id: "+item.stopId+"}").icon(BitmapDescriptorFactory.fromResource(R.drawable.bus)));
     		marker.add(m);
     		
     	}
@@ -309,13 +309,6 @@ public class MapView  extends FragmentActivity  implements LocationListener ,OnI
 
 	@Override
 	public void onLocationChanged(Location location) {
-
-		for (int index = 0 ; index < marker.size(); index++){
-   		 	
-   		 	Log.d("onLocationChanged() title: ", marker.get(index).getId());
-   		 	marker.get(index).hideInfoWindow();
-   		 	
-   		}
 		
 		if(mMap != null){mMap.clear();}
 		user = new MarkerOptions();		
@@ -350,13 +343,16 @@ public class MapView  extends FragmentActivity  implements LocationListener ,OnI
 	}
 
 	@Override
-	public void onInfoWindowClick(Marker marker) {
-		 String mID 	=  marker.getId().substring(1);
-		 int index 	=  Integer.parseInt(mID);
-		 Toast.makeText(this,"Loading Current map..."+marker.getId(), Toast.LENGTH_LONG).show();
-		 String stopId  = busStopLocation.get(index).stopId;
-		 String toward 	= busStopLocation.get(index).toward;
-		 String bus 	= busStopLocation.get(index).bus;
+	public void onInfoWindowClick(Marker marker) {		 
+		 String title = marker.getSnippet();
+		 String current_pick[] = title.split(":");
+		 String bus = current_pick[0].replace("{id","");
+		 String stopId = current_pick[1].replace("}","").trim();
+		 String toward = marker.getTitle();
+		 
+		 Log.e("bus",bus);
+		 Log.e("StopId",stopId);
+		 Log.e("title",marker.getTitle());
 		 sendMessage(stopId,toward,bus);
 		
 	}
@@ -411,18 +407,12 @@ public class MapView  extends FragmentActivity  implements LocationListener ,OnI
 	        	startActivity(intent2);
 	        	return true;
 	        case R.id.search:
-	        	
-	        	Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-	        	onLocationChanged(location);
-	        	getGpsCoor(lat,lng);
-	        	//Toast.makeText(this,"Loading  favourit...", Toast.LENGTH_LONG).show();
 	        	cd.showAlertDialog(MapView.this, "Coming Soon...", "Search via BUS, POSTCODE , BUS STOP ID.", false);
 	        	return true;
 	        case R.id.reload:
 	        	Toast.makeText(this,"Loading Current Location...: ", Toast.LENGTH_LONG).show();
-	        	 provider 		  = locationManager.getBestProvider(criteria, true);
-	        	 if (servicesConnected()) {
-	        		
+	        	
+	        	 if (servicesConnected()) {	        		
 	        		 Location currentLocation = mLocationClient.getLastLocation();
 	        		 String lng=LocationUtils.getLatLng(this, currentLocation);
 	        		 Log.e("lng", lng);
@@ -469,8 +459,7 @@ public class MapView  extends FragmentActivity  implements LocationListener ,OnI
     private boolean servicesConnected() {
 
         // Check that Google Play services is available
-        int resultCode =
-                GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
+        int resultCode =    GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
 
         // If Google Play services is available
         if (ConnectionResult.SUCCESS == resultCode) {

@@ -38,7 +38,6 @@ public class FavouritStop extends ListActivity {
 		String stopID 	= myFavourit.get(position).stopId;
 		String toward 	= myFavourit.get(position).toward;
 		String bus 	= myFavourit.get(position).bus;
-		Toast.makeText(getBaseContext(), position+ "= position:"+myFavourit.get(position).stopId, Toast.LENGTH_LONG).show();
 		sendMessage(stopID,toward,bus);
 	}
 	
@@ -59,7 +58,6 @@ public class FavouritStop extends ListActivity {
     public void removeFavourit( View v){
     	final int position = getListView().getPositionForView((RelativeLayout)v.getParent());
     	String favStop = myFavourit.get(position).stopId;
-		Toast.makeText(getBaseContext(), position+ "= position:"+myFavourit.get(position).stopId, Toast.LENGTH_LONG).show();
 		myFavourit.remove(position);
 		db.deleteFavourit(favStop);
 		setListAdapter(new MyFavouritStop(this, myFavourit));
