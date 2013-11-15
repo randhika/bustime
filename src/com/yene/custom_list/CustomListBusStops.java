@@ -21,7 +21,6 @@ public class CustomListBusStops extends BaseAdapter {
     private static final String TAG = "CUSTOMLISTADAPTER";
 	private ArrayList<BusStopFile> busStopList;
     private LayoutInflater layoutInflater;
-    private View listview;
  
     public CustomListBusStops(Context context, ArrayList<BusStopFile> busStopList) {
         this.busStopList = busStopList;
@@ -31,7 +30,6 @@ public class CustomListBusStops extends BaseAdapter {
 		// TODO Auto-generated constructor stub
     	 this.busStopList = busStopList;
          layoutInflater = LayoutInflater.from(listView.getActivity());
-         System.out.print(TAG);
 	}
 
 	
@@ -47,7 +45,7 @@ public class CustomListBusStops extends BaseAdapter {
     public long getItemId(int position) {
         return position;
     }
-    @Override
+ 
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder holder;
         if (convertView == null) {
@@ -62,24 +60,15 @@ public class CustomListBusStops extends BaseAdapter {
             holder = (ViewHolder) convertView.getTag();
         }
         
-        
-        holder.stopName.setText(""+busStopList.get(position).toward);
-        holder.busNumber.setText(busStopList.get(position).bus.trim());
-        holder.toward.setText(busStopList.get(position).stopName);
-        setListview(convertView);
+        if(busStopList.isEmpty()){
+        	holder.stopName.setText(busStopList.get(position).toward);
+        	holder.busNumber.setText(busStopList.get(position).bus.trim());
+        	holder.toward.setText(busStopList.get(position).stopName);
+        }
         return convertView;
     }
  
-    public View getListview() {
-		return listview;
-	}
-
-
-	public void setListview(View listview) {
-		this.listview = listview;
-	}
-
-	public class ViewHolder {
+    public class ViewHolder {
         TextView stopName;
         TextView busNumber;
         TextView toward;

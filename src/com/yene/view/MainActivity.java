@@ -25,7 +25,6 @@ import android.app.ListActivity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -37,7 +36,7 @@ import android.widget.Toast;
 
 
 
-public class MainActivity extends FragmentActivity implements LocationListener{
+public class MainActivity extends ListActivity implements LocationListener{
 	 public final static String BUS_NO_MESSAGE 	= "com.yene.BUSNUMBER";
 	 public final static String TOWARD 			= "com.yene.TOWARD";
 	 public final static String BUSLIST 		= "com.yene.BUSSTOP";
@@ -82,8 +81,7 @@ public class MainActivity extends FragmentActivity implements LocationListener{
 	public void getGpsCoor(double lat , double lng){
 		bsf.clear();
 		bsf = bf.findBusStop( lat,lng);
-		//setContentView(new CustomListBusStops(this, bsf));
-		 setContentView(R.layout.activity_main_other);
+		setListAdapter(new CustomListBusStops(this, bsf));
 		dialog.dismiss();
 	}
 	@Override
@@ -135,11 +133,11 @@ public class MainActivity extends FragmentActivity implements LocationListener{
 	}
 	
 	public void addFavourit (View v){
-//		 final int position = getListView().getPositionForView((RelativeLayout)v.getParent());
-//		 String stopID = bf.eachStop().get(position).stopId;
-//		 String toward = bf.eachStop().get(position).toward;
-//		 String bus = bf.eachStop().get(position).bus;
-//		 sendMessage(stopID,toward,bus);
+		 final int position = getListView().getPositionForView((RelativeLayout)v.getParent());
+		 String stopID = bf.eachStop().get(position).stopId;
+		 String toward = bf.eachStop().get(position).toward;
+		 String bus = bf.eachStop().get(position).bus;
+		 sendMessage(stopID,toward,bus);
 	}
 	@Override
 	public void onLocationChanged(Location location) {

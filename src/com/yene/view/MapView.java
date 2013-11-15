@@ -4,6 +4,15 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import com.yene.helper.*;
+
+
+
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesClient;
+import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.location.LocationClient;
+import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.InfoWindowAdapter;
@@ -19,20 +28,19 @@ import com.yene.bustiming.BusStopFile;
 import com.yene.bustiming.ConnectionDetector;
 import com.yene.bustiming.FavouritStop;
 import com.yene.bustiming.R;
-import com.yene.bustiming.R.drawable;
-import com.yene.bustiming.R.id;
-import com.yene.bustiming.R.layout;
-import com.yene.bustiming.R.menu;
+
 import com.yene.fragment.AppSectionsPagerAdapter;
 import com.yene.helper.ReadFile;
 
 
 import android.app.ActionBar;
 import android.app.ActionBar.Tab;
+import android.app.Dialog;
 import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
@@ -40,6 +48,7 @@ import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
@@ -53,7 +62,8 @@ import android.widget.Toast;
 
 
  
-public class MapView  extends FragmentActivity  implements LocationListener ,OnInfoWindowClickListener, InfoWindowAdapter,ActionBar.TabListener{
+public class MapView  extends FragmentActivity  implements LocationListener ,OnInfoWindowClickListener, InfoWindowAdapter,ActionBar.TabListener
+, GooglePlayServicesClient.ConnectionCallbacks,     GooglePlayServicesClient.OnConnectionFailedListener{
     private static final String TAG 			= "MapView";
     public final static String BUS_NO_MESSAGE 	= "com.yene.BUSNUMBER";
     public final static String TOWARD 			= "com.yene.TOWARD";
@@ -76,6 +86,29 @@ public class MapView  extends FragmentActivity  implements LocationListener ,OnI
 	private Criteria criteria;
 	private AppSectionsPagerAdapter mAppSectionsPagerAdapter;
     private ViewPager mViewPager;
+    
+  
+    
+    // A request to connect to Location Services
+    private LocationRequest mLocationRequest;
+
+    // Stores the current instantiation of the location client in this object
+    private LocationClient mLocationClient;
+    
+    /*
+     * Note if updates have been turned on. Starts out as "false"; is set to "true" in the
+     * method handleRequestSuccess of LocationUpdateReceiver.
+     *
+     */
+    boolean mUpdatesRequested = false;
+    
+    // Handle to SharedPreferences for this app
+    SharedPreferences mPrefs;
+    
+    // Handle to a SharedPreferences editor
+    SharedPreferences.Editor mEditor;
+    
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -90,7 +123,7 @@ public class MapView  extends FragmentActivity  implements LocationListener ,OnI
         actionBar.setHomeButtonEnabled(false);
 
         // Specify that we will be displaying tabs in the action bar.
-        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+       // actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 
         // Set up the ViewPager, attaching the adapter and setting up a listener for when the
         // user swipes between sections.
@@ -141,14 +174,67 @@ public class MapView  extends FragmentActivity  implements LocationListener ,OnI
 	    }
 	    new DownloadFilesTask().execute();
 	    
+	    // Create a new global location parameters object
+        mLocationRequest = LocationRequest.create();
+
+        /*
+         * Set the update interval
+         */
+        mLocationRequest.setInterval(LocationUtils.UPDATE_INTERVAL_IN_MILLISECONDS);
+
+        // Use high accuracy
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+
+        // Set the interval ceiling to one minute
+        mLocationRequest.setFastestInterval(LocationUtils.FAST_INTERVAL_CEILING_IN_MILLISECONDS);
+
+        // Note that location updates are off until the user turns them on
+        mUpdatesRequested = false;
+
+        // Open Shared Preferences
+        mPrefs = getSharedPreferences(LocationUtils.SHARED_PREFERENCES, Context.MODE_PRIVATE);
+
+        // Get an editor
+        mEditor = mPrefs.edit();
+
+        /*
+         * Create a new location client, using the enclosing class to
+         * handle callbacks.
+         */
+        mLocationClient = new LocationClient(this, this, this);
+	    
     }
     
- 
+    /*
+     * Called when the Activity is restarted, even before it becomes visible.
+     */
+    @Override
+    public void onStart() {
+
+        super.onStart();
+
+        /*
+         * Connect the client. Don't re-start any requests here;
+         * instead, wait for onResume()
+         */
+        mLocationClient.connect();
+
+    }
 
     @Override
     protected void onResume() {
         super.onResume();
-        //setUpMapIfNeeded();
+
+        // If the app already has a setting for getting location updates, get it
+        if (mPrefs.contains(LocationUtils.KEY_UPDATES_REQUESTED)) {
+            mUpdatesRequested = mPrefs.getBoolean(LocationUtils.KEY_UPDATES_REQUESTED, false);
+
+        // Otherwise, turn off location updates until requested
+        } else {
+            mEditor.putBoolean(LocationUtils.KEY_UPDATES_REQUESTED, false);
+            mEditor.commit();
+        }
+
     }
 
     /**
@@ -167,11 +253,9 @@ public class MapView  extends FragmentActivity  implements LocationListener ,OnI
      * {@link #onResume()} to guarantee that it will be called.
      */
     
-    public void getGpsCoor(double lat , double lng){
-    	Log.d(TAG,"MapView getGpsCoor : "+lat);
+    public void getGpsCoor(double lat , double lng){    	
     	busStopLocation.clear();
-		busStopLocation = bf.findBusStop(lat,lng);
-		Log.d(TAG,"MapView getGpsCoor : "+busStopLocation.size());
+		busStopLocation = bf.findBusStop(lat,lng);		
 		setUpMapIfNeeded();
 	}
 
@@ -230,8 +314,6 @@ public class MapView  extends FragmentActivity  implements LocationListener ,OnI
    		 	
    		 	Log.d("onLocationChanged() title: ", marker.get(index).getId());
    		 	marker.get(index).hideInfoWindow();
-   		 	//System.out.print("\nonLocationChanged() Size: ");
-   		 	
    		 	
    		}
 		
@@ -239,7 +321,7 @@ public class MapView  extends FragmentActivity  implements LocationListener ,OnI
 		user = new MarkerOptions();		
 		lat = location.getLatitude();
 		lng = location.getLongitude();
-		//System.out.print("MapView onLocationChanged(): "+lat+" = "+ lng);
+		
 		if (mMap != null && busStopLocation.size() > 0) {
 			
 			mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lat, lng), 15));
@@ -337,18 +419,16 @@ public class MapView  extends FragmentActivity  implements LocationListener ,OnI
 	        	cd.showAlertDialog(MapView.this, "Coming Soon...", "Search via BUS, POSTCODE , BUS STOP ID.", false);
 	        	return true;
 	        case R.id.reload:
-	        	Toast.makeText(this,"Loading Current Location...: "+provider, Toast.LENGTH_LONG).show();
-	        	 provider 		  = locationManager.getBestProvider(criteria, true);	
-	        	if(!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)){
-	        	       Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-	        	       startActivity(intent);
-	        	      
-	        	}
-	        	locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 15000, 100, this);
-	        	Location newLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-	        	if(newLocation !=null){
-	        		onLocationChanged(newLocation);
-	        	}
+	        	Toast.makeText(this,"Loading Current Location...: ", Toast.LENGTH_LONG).show();
+	        	 provider 		  = locationManager.getBestProvider(criteria, true);
+	        	 if (servicesConnected()) {
+	        		
+	        		 Location currentLocation = mLocationClient.getLastLocation();
+	        		 String lng=LocationUtils.getLatLng(this, currentLocation);
+	        		 Log.e("lng", lng);
+	        		 onLocationChanged(currentLocation);
+	        	 }
+	        
 	        default:
 	            return super.onOptionsItemSelected(item);
 	    }
@@ -380,6 +460,71 @@ public class MapView  extends FragmentActivity  implements LocationListener ,OnI
 		}
 	
 	}
+	
+	  /**
+     * Verify that Google Play services is available before making a request.
+     *
+     * @return true if Google Play services is available, otherwise false
+     */
+    private boolean servicesConnected() {
+
+        // Check that Google Play services is available
+        int resultCode =
+                GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
+
+        // If Google Play services is available
+        if (ConnectionResult.SUCCESS == resultCode) {
+            // In debug mode, log the status
+            Log.d(LocationUtils.APPTAG, getString(R.string.play_services_available));
+
+            // Continue
+            return true;
+        // Google Play services was not available for some reason
+        } else {
+            // Display an error dialog
+            Dialog dialog = GooglePlayServicesUtil.getErrorDialog(resultCode, this, 0);
+            if (dialog != null) {
+                ErrorDialogFragment errorFragment = new ErrorDialogFragment();
+                errorFragment.setDialog(dialog);
+                errorFragment.show(getSupportFragmentManager(), LocationUtils.APPTAG);
+            }
+            return false;
+        }
+    }
+    /**
+     * Define a DialogFragment to display the error dialog generated in
+     * showErrorDialog.
+     */
+    public static class ErrorDialogFragment extends DialogFragment {
+
+        // Global field to contain the error dialog
+        private Dialog mDialog;
+
+        /**
+         * Default constructor. Sets the dialog field to null
+         */
+        public ErrorDialogFragment() {
+            super();
+            mDialog = null;
+        }
+
+        /**
+         * Set the dialog to display
+         *
+         * @param dialog An error dialog
+         */
+        public void setDialog(Dialog dialog) {
+            mDialog = dialog;
+        }
+
+        /*
+         * This method must return a Dialog to the DialogFragment.
+         */
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            return mDialog;
+        }
+    }
 	@Override
 	public void onTabReselected(Tab tab, FragmentTransaction ft) {
 		// TODO Auto-generated method stub
@@ -398,6 +543,30 @@ public class MapView  extends FragmentActivity  implements LocationListener ,OnI
 
 	@Override
 	public void onTabUnselected(Tab tab, FragmentTransaction ft) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+
+	@Override
+	public void onConnectionFailed(ConnectionResult arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+
+	@Override
+	public void onConnected(Bundle arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+
+	@Override
+	public void onDisconnected() {
 		// TODO Auto-generated method stub
 		
 	}

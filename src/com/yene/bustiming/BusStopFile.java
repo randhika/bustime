@@ -5,7 +5,7 @@ import android.os.Parcelable;
 
 
 
-public class BusStopFile  implements Comparable<BusStopFile>{ 
+public class BusStopFile  implements Comparable<BusStopFile> , Parcelable { 
 
 	public String stopId;
 	public String stopName;
@@ -23,6 +23,8 @@ public class BusStopFile  implements Comparable<BusStopFile>{
 		this.bus		= bus;
 		this.toward 	= toward;
 	}
+
+
 
 	@Override
 	public String toString() {
@@ -83,6 +85,36 @@ public class BusStopFile  implements Comparable<BusStopFile>{
 		
 	}
 
-	
+	@Override
+	public int describeContents() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
 
+	@Override
+	public void writeToParcel(Parcel dest, int flags) {
+		dest.writeString(stopId);
+		dest.writeString(stopName);
+		dest.writeString(stopLat);
+		dest.writeString(stopLng);
+		dest.writeString(bus);
+		dest.writeString(toward);
+	}
+	
+	 public static final Parcelable.Creator<BusStopFile> CREATOR    = new Parcelable.Creator<BusStopFile>() {
+		  public BusStopFile createFromParcel(Parcel in) {
+			  return new BusStopFile(in);
+		  }
+
+		  public BusStopFile[] newArray(int size) {
+			  	return new BusStopFile[size];
+		  }
+	 };
+	 
+	 private BusStopFile (Parcel in){
+		 
+		 stopId = in.readString();
+		 
+	 }
+	  
 	}

@@ -11,7 +11,8 @@ import android.view.ViewGroup;
 
 
 public class AppSectionsPagerAdapter extends FragmentPagerAdapter {
-
+	
+	
     public AppSectionsPagerAdapter(FragmentManager fm) {
         super(fm);
     }
@@ -45,13 +46,13 @@ public class AppSectionsPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public int getCount() {
-        return 2;
+        return 1;
     }
 
     @Override
     public CharSequence getPageTitle(int position) {
     	
-    	String Map[] = {"Map","List"};
+    	String Map[] = {"Map","Options"};
     	
         return ""+Map[position];
     }

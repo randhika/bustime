@@ -18,10 +18,14 @@ import android.util.Log;
 public class ReadFile  {	
 	ArrayList <BusStopFile> busCollection = new ArrayList<BusStopFile>();
 	ArrayList <BusStopFile> nearby = new ArrayList<BusStopFile>();
+	static String   CALLER= " CALLER CLASS";
 	static int count =0;
 	public ReadFile() {
 	      System.out.println("-------------------: ");
 	      System.out.println("Object BufferedReaderExample: ");
+	   }
+	public ReadFile(String klass) {
+	     Log.e(CALLER, klass );
 	   }
 	
 	public ArrayList<BusStopFile> eachStop(){
@@ -107,8 +111,8 @@ public class ReadFile  {
 	}
 	
 	public ArrayList<BusStopFile> findBusStop(double nearLat, double nearLng){
-		System.out.println("-------------------: \n");
-		System.out.println("lat = "+nearLat  +" lng = " +nearLng );
+		Log.e("nearLat:", ""+nearLat);
+		Log.e("nearLng:", ""+nearLng);
 		int counts = 0;
 		
 		for(BusStopFile item :busCollection ){
@@ -117,15 +121,17 @@ public class ReadFile  {
 			lat 		= Double.parseDouble(""+item.getStopLat());
 			lng 		= Double.parseDouble(""+item.getStopLng());
 			double d 	= distance(nearLat,nearLng,lat,lng);
-			
+			//Log.e("distance: ", ""+d);
 			
 			if(d < 0.5){
-				Log.e("Distnace: ","Distnace ="+d );
+				
 				nearby.add(item);
 				counts++;
 				}
 			}
 		Log.e("Done Near by top: ","-------------------: \n"+nearby.size());
+		Log.e("Counts: ","-------------------: \n"+counts);
+	
 		
 		return nearby;	
 	}

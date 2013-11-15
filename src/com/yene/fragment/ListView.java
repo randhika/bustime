@@ -1,11 +1,11 @@
 package com.yene.fragment;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 
 import com.yene.bustiming.BusStopFile;
 import com.yene.bustiming.R;
-import com.yene.bustiming.R.layout;
-import com.yene.bustiming.R.string;
+import com.yene.custom_list.CustomListBusStops;
 import com.yene.helper.ReadFile;
 
 import android.location.Location;
@@ -16,7 +16,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
+
 
 
 /**
@@ -29,12 +29,20 @@ public  class ListView extends Fragment implements LocationListener {
     private ReadFile bf = new ReadFile();
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.select_direction, container, false);
+    	
+    	
+        View rootView1 = inflater.inflate(R.layout.select_direction, container, false);
         Bundle args = getArguments();
-        ((TextView) rootView.findViewById(R.id.busNumber)).setText("List View");
+       
         bsf.clear();
+        InputStream is = ListView.this.getResources().openRawResource(R.drawable.busstop);
+		bf.readName(is);
 		bsf = bf.findBusStop(51.529121,-0.0986832);
-		Log.e("bsf", ""+bsf.size());
+		Log.e("Before bsf", ""+bsf.size());
+	
+		CustomListBusStops listview = new CustomListBusStops(this,bsf);
+		View rootView = listview.getView(1, rootView1, container);
+		
 		
         return rootView;
     }
