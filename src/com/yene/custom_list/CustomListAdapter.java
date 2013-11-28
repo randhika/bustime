@@ -25,6 +25,7 @@ public class CustomListAdapter extends BaseAdapter {
     public CustomListAdapter(Context context, ArrayList<BusStopObject> listData) {
         this.listData = listData;
         layoutInflater = LayoutInflater.from(context);
+        
     }
  
     @Override
@@ -47,25 +48,30 @@ public class CustomListAdapter extends BaseAdapter {
         if (convertView == null) {
             convertView = layoutInflater.inflate(R.layout.singel_stop, null);
             holder = new ViewHolder();
-            holder.headlineView = (TextView) convertView.findViewById(R.id.stopName);
-            holder.reporterNameView = (TextView) convertView.findViewById(R.id.busNumber);
-            holder.reportedDateView = (TextView) convertView.findViewById(R.id.date);
+            
+            holder.toward 		= (TextView) convertView.findViewById(R.id.destinationName);
+            holder.busNumber 	= (TextView) convertView.findViewById(R.id.busNumber);
+            holder.countDown 	= (TextView) convertView.findViewById(R.id.date);
+            holder.busReg 		= (TextView) convertView.findViewById(R.id.busRegNo);
+            
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
         
-        holder.headlineView.setText(""+listData.get(position).getTowards());
-        holder.reporterNameView.setText(listData.get(position).getbusNumber());
-        holder.reportedDateView.setText(listData.get(position).getcountDown());
+        holder.toward.setText(listData.get(position).getTowards());
+        holder.busNumber.setText(listData.get(position).getbusNumber());
+        holder.countDown.setText(listData.get(position).getcountDown());
+        holder.busReg.setText(listData.get(position).getLineID());
  
         return convertView;
     }
  
     public class ViewHolder {
-        TextView headlineView;
-        TextView reporterNameView;
-        TextView reportedDateView;
+        TextView toward;
+        TextView busNumber;
+        TextView countDown;
+        TextView busReg;
     }
  
 }

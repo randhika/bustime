@@ -3,8 +3,8 @@ package com.yene.db;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.yene.bustiming.BusStopFile;
-import com.yene.bustiming.MyBusStopObject;
+import com.yene.bustiming.EachBusStop;
+
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -113,8 +113,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
  
     // Getting All Favour Bus Stop
-    public ArrayList<BusStopFile> getAllFavourStop() {
-        ArrayList<BusStopFile> favouritStop = new ArrayList<BusStopFile>();
+    public ArrayList<EachBusStop> getAllFavourStop() {
+        ArrayList<EachBusStop> favouritStop = new ArrayList<EachBusStop>();
         // Select All Query
         String selectQuery = "SELECT  * FROM " + TABLE_LOGS;
         SQLiteDatabase db = this.getWritableDatabase();
@@ -122,7 +122,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         // looping through all rows and adding to list
         if (cursor.moveToFirst()) {
             do {
-            	BusStopFile   myFavStop = new BusStopFile(cursor.getString(1), cursor.getString(2),"1","2",cursor.getString(3),cursor.getString(4));
+            	EachBusStop   myFavStop = new EachBusStop(cursor.getString(1), cursor.getString(2),"1","2",cursor.getString(3),cursor.getString(4));
             	favouritStop.add(myFavStop);
             } while (cursor.moveToNext());
         }
@@ -131,14 +131,14 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         return favouritStop;
     }
     // Updating single contact
-    public int updateContact(MyBusStopObject myStop) {
+    public int updateContact(String myStop) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         //values.put(KEY_ID, myStop.getId());
         //values.put(KEY_TOWARD, myStop.direction);
         // updating row
         return db.update(TABLE_LOGS, values, KEY_ID + " = ?",
-                new String[] { String.valueOf(myStop.getId()) });
+                new String[] { String.valueOf(myStop) });
     }
  
     // Deleting single contact

@@ -1,0 +1,49 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical" 
+    android:background="@android:color/white"
+    android:layout_margin="5dp"
+    >
+
+    <TextView
+        android:id="@+id/textViewTitle"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="5dp"
+        android:gravity="left"
+        android:text="TextView"
+        android:textSize="20sp"
+        android:background="@drawable/textlines"
+        android:textColor="#440000" />
+    <TextView
+        android:id="@+id/busNo"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="5dp"
+        android:gravity="left"
+        android:text="busNO"
+        android:textColor="#440000"
+        android:textSize="15sp" />
+<!--       <TextView -->
+<!--         android:id="@+id/dis" -->
+<!--         android:layout_width="match_parent" -->
+<!--         android:layout_height="match_parent" -->
+<!--         android:layout_margin="5dp" -->
+<!--         android:gravity="left" -->
+<!--         android:text="dis" -->
+<!--         android:textSize="20sp" /> -->
+    
+       <Button
+        android:id="@+id/button1"
+        style="@style/ButtonText"
+        android:layout_height="wrap_content"       
+        android:gravity="center"
+        
+        android:layout_marginTop="26dp"
+        android:background="@drawable/green"
+        android:onClick="addFavourit"
+        android:text="LIVE update" />
+      
+       
+</LinearLayout>

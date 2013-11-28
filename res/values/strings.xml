@@ -19,6 +19,7 @@
     <string name="search">Search</string>
     <string name="remove">Remove</string>
     <string name="reload">Find Me</string>
+    <string name="searchbus"> Search for bus</string>
      
      <style name="ButtonText">
 	    <item name="android:layout_width">fill_parent</item>
@@ -65,7 +66,7 @@
       <string name="demo_collection">Demo Collection</string>
       
        <!-- Application identifiers -->
-    <string name="app_name">Location Updates</string>
+   
     <string name="app_tag">LocationUpdates</string>
     <string name="app_description">
         Displays current address and current or updated location using Location Services

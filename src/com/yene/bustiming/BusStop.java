@@ -26,13 +26,15 @@ import android.widget.Toast;
 import com.yene.bustiming.R;
 import com.yene.custom_list.CustomListAdapter;
 import com.yene.db.DatabaseHandler;
-import com.yene.view.MainActivity;
+import com.yene.view.MapView;
+
 
 
 public class BusStop extends ListActivity {
 	 public  final static String BUS_MESSAGE = "com.yene.BUSNUMBER";
 	 public  static final String BUS_DIRECTION = "com.yene.BUSDIRECTION";
      public  SingelBusStop  gerUrl = new SingelBusStop();
+     private String showMenu = "";
      private ProgressDialog dialog;
      private DatabaseHandler db ;
      private ArrayList<String> item = new ArrayList<String>();
@@ -45,17 +47,20 @@ public class BusStop extends ListActivity {
 		dialog 			= new ProgressDialog(this);
 		context 		= getApplicationContext();
 		Intent intent 	= getIntent();
-		busStopID 		= intent.getStringExtra(MainActivity.BUS_NO_MESSAGE);
-		toward 			= intent.getStringExtra(MainActivity.TOWARD);
-		busList			= intent.getStringExtra(MainActivity.BUSLIST);
+		busStopID 		= intent.getStringExtra(MapView.BUS_NO_MESSAGE);
+		showMenu		= intent.getStringExtra(FavouritStop.KLASS);
+		
 		dialog.setMessage("Please wait loading...");
 		dialog.show();
+		
 		new DownloadFilesTask().execute();
 	}
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.activity_main, menu);
+		if(showMenu == null){
+			getMenuInflater().inflate(R.menu.activity_main, menu);
+		}
 		return true;
 	}
 	@Override
@@ -71,11 +76,7 @@ public class BusStop extends ListActivity {
 	}
 
 	public void openBusStopList (String direction, String busNumber){
-		Intent intent 		= new Intent(this, BusStopList.class);
-	    String search_term 	= direction+","+busNumber;
-	
-	    intent.putExtra(BUS_DIRECTION, search_term);
-	 	startActivity(intent);
+		
 	}
 	private String convertDate( Long str )
 	{
@@ -122,24 +123,50 @@ public class BusStop extends ListActivity {
 	    	ArrayList<BusStopObject> timeArrivle = new  ArrayList<BusStopObject>();
 	    	
 	    	 for(int index = 0 ; index < item.size(); index++){
-	    		 String []busDirection	= item.get(index).split(",",0);
-	    		 String arrivTime 		= busDirection[3].replace("]", "");
-	    		 busStopName 			= busDirection[1].replace("\"", "");
-	    		 String toward 			= busDirection[1].replace("\"", "");
-	 	         String busNumber 		= busDirection[2].replace("\"", "");	 	
-	 	         String countDown 		= convertDate( Long.parseLong(arrivTime, 10));
+	    		 String []eachBusStop	= item.get(index).split(",");
+	    		 Log.e("New Arrray",item.get(index));
+	    		 if(eachBusStop.length == 7){
+	    		 
+	    			 busStopName 			= eachBusStop[1].replace("\"", "");
+	    			 String busNumber 		= eachBusStop[2].replace("\"", "");	 
+	    			 String toward 			= eachBusStop[3].replace("\"", "");
+	    			 String busID 	 		= eachBusStop[4].replace("\"", "");
+	    			 String busReg     		= eachBusStop[5].replace("\"", "");	
+	    			 String arrivTime 		= eachBusStop[6].replace("]", "");
+	    			 String countDown 		= convertDate( Long.parseLong(arrivTime, 10));
+	    			 Log.e("New Data",""+busStopName+"-"+busNumber+"-"+toward+"-"+toward+"-"+busID+"-"+busReg+"-"+countDown);
+	    			 BusStopObject busStopObj = new BusStopObject(toward,  busNumber , countDown,  busStopName ,  busReg );
+	    			 timeArrivle.add(busStopObj);
+	    		 }
+	    		 if(eachBusStop.length == 8){
+		    		 
+	    			 busStopName 			= eachBusStop[1].replace("\"", "");
+	    			 String busNumber 		= eachBusStop[2].replace("\"", "");	 
+	    			 String toward 			= eachBusStop[3].replace("\"", "");
+	    			 toward                += eachBusStop[4].replace("\"", "");
+	    			 String busID 	 		= eachBusStop[5].replace("\"", "");
+	    			 String busReg     		= eachBusStop[6].replace("\"", "");	
+	    			 String arrivTime 		= eachBusStop[7].replace("]", "");
+	    			 String countDown 		= convertDate( Long.parseLong(arrivTime, 10));
+	    			 //Log.e("New Data",""+busStopName+"-"+busNumber+"-"+toward+"-"+toward+"-"+busID+"-"+busReg+"-"+countDown);
+	    			 BusStopObject busStopObj = new BusStopObject(toward,  busNumber , countDown,  busStopName ,  busReg );
+	    			 timeArrivle.add(busStopObj);
+	    		 }
 	 	         
-	    		 BusStopObject busStopObj = new BusStopObject(toward,busNumber, countDown );
-	    		 timeArrivle.add(busStopObj);
+	    		
+	    		 
 	    	 }
 	    	 Collections.sort(timeArrivle);  
-			 setListAdapter(new CustomListAdapter(BusStop.this, timeArrivle));
-			 
+	    	 setListAdapter(new CustomListAdapter(BusStop.this, timeArrivle));
+	    	 setTitle(busStopName);
 	     }
 
 		@Override
 		protected Long doInBackground(URL... params) {
-			String url = "http://countdown.api.tfl.gov.uk/interfaces/ura/instant_V1?StopCode1="+busStopID;
+			//String url = "http://countdown.api.tfl.gov.uk/interfaces/ura/instant_V1?StopCode1="+busStopID;
+			String url = "http://countdown.api.tfl.gov.uk/interfaces/ura/instant_V1?StopCode1="+busStopID+"&"+
+						"ReturnList=VehicleID,RegistrationNumber,DestinationName,EstimatedTime,LineID,StopPointName";
+			Log.e("Json",busStopID);
 			item = gerUrl.getJSONFromUrl(url);
 			return null;
 		}

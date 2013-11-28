@@ -6,57 +6,27 @@
     android:orientation="horizontal"
     android:background="#F1F1F1"
     android:padding="5dip" >
-     <Button
+
+    <EditText
+        android:id="@+id/searchTerm"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="107dp"
+        android:ems="10" />
+
+    <Button
         android:id="@+id/button1"
         style="@style/ButtonText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"       
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:layout_marginTop="26dip"
-        android:background="@drawable/blue"
-        android:gravity="center"
-        android:onClick="addFavourit"
-        android:text="@string/view_button_text" />
-    <TextView
-        android:id="@+id/toward"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dip"
-        android:layout_marginRight="20dip"
-        android:text=""
-        android:textColor="#336699"
-        android:textSize="20sp" />
-    <TextView
-        android:id="@+id/stopName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/toward"
-        android:text=""
-        android:textColor="#333333"
-        android:textStyle="bold"
-        />
-    <TextView
-        android:id="@+id/busNumber"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/stopName"
-        android:layout_marginTop="5dip"
-        android:text=""
-        android:textColor="#333333"
-        android:textSize="18sp"
-        android:layout_marginBottom="5dip" />
-    
-       <LinearLayout
-        android:id="@+id/linearLayout1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/button1"
-        android:layout_marginTop="10dip"
-        android:orientation="horizontal" >
-
-      
-    </LinearLayout>
-    
-   
+        android:layout_below="@id/searchTerm"
+        android:layout_centerVertical="true"
+        android:layout_marginTop="150dp"
+        android:background="@drawable/green"
+        android:onClick="searchBus"
+        android:text="Search" />
  
 </RelativeLayout>

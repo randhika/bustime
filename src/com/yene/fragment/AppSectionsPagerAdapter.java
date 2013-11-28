@@ -19,11 +19,11 @@ public class AppSectionsPagerAdapter extends FragmentPagerAdapter {
 
     LaunchpadSectionFragment lp = new LaunchpadSectionFragment();
     public  Fragment ListView(int i){
-    	 Fragment fragment = new ListView();
+    	 //Fragment fragment = new ListView();
     	    Bundle args = new Bundle();
-    	    args.putInt(ListView.ARG_SECTION_NUMBER, i + 1);
-    	    fragment.setArguments(args);
-			return fragment;
+    	    //args.putInt(ListView.ARG_SECTION_NUMBER, i + 1);
+    	    //fragment.setArguments(args);
+			return null;
     }
    
     @Override

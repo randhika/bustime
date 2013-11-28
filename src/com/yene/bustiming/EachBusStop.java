@@ -5,7 +5,7 @@ import android.os.Parcelable;
 
 
 
-public class BusStopFile  implements Comparable<BusStopFile> , Parcelable { 
+public class EachBusStop  implements Comparable<EachBusStop> , Parcelable { 
 
 	public String stopId;
 	public String stopName;
@@ -13,15 +13,28 @@ public class BusStopFile  implements Comparable<BusStopFile> , Parcelable {
 	String stopLng;
 	public String bus;
 	public String toward;
-	private int mData;
+	//private int mData;
+	private String distance;
 	
-	public BusStopFile(String id, String name , String lat ,String lng, String bus,String toward){
+	public EachBusStop(String id, String name , String lat ,String lng, String bus,String toward){
 		this.stopId 	= id;
 		this.stopName 	= name;
 		this.stopLat 	= lat;
 		this.stopLng 	= lng;
 		this.bus		= bus;
 		this.toward 	= toward;
+	}
+
+
+
+	public String getDistance() {
+		return distance;
+	}
+
+
+
+	public void setDistance(String distance) {
+		this.distance = distance;
 	}
 
 
@@ -39,8 +52,8 @@ public class BusStopFile  implements Comparable<BusStopFile> , Parcelable {
 
 	@Override
 	public boolean equals(Object obj) {
-		if(!( obj instanceof BusStopFile)) return false;
-		BusStopFile bus =(BusStopFile) obj;
+		if(!( obj instanceof EachBusStop)) return false;
+		EachBusStop bus =(EachBusStop) obj;
 		
 		return bus.stopId.equals(this.stopId) && bus.bus.equals(this.bus);
 	}
@@ -78,7 +91,7 @@ public class BusStopFile  implements Comparable<BusStopFile> , Parcelable {
 	}
 
 	@Override
-	public int compareTo(BusStopFile o) {
+	public int compareTo(EachBusStop o) {
 		int countDown = Integer.parseInt(o.getStopId());
 		int thisCount = Integer.parseInt(this.getStopId());
 		return thisCount-countDown;
@@ -101,17 +114,17 @@ public class BusStopFile  implements Comparable<BusStopFile> , Parcelable {
 		dest.writeString(toward);
 	}
 	
-	 public static final Parcelable.Creator<BusStopFile> CREATOR    = new Parcelable.Creator<BusStopFile>() {
-		  public BusStopFile createFromParcel(Parcel in) {
-			  return new BusStopFile(in);
+	 public static final Parcelable.Creator<EachBusStop> CREATOR    = new Parcelable.Creator<EachBusStop>() {
+		  public EachBusStop createFromParcel(Parcel in) {
+			  return new EachBusStop(in);
 		  }
 
-		  public BusStopFile[] newArray(int size) {
-			  	return new BusStopFile[size];
+		  public EachBusStop[] newArray(int size) {
+			  	return new EachBusStop[size];
 		  }
 	 };
 	 
-	 private BusStopFile (Parcel in){
+	 private EachBusStop (Parcel in){
 		 
 		 stopId = in.readString();
 		 

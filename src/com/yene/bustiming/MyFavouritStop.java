@@ -17,10 +17,10 @@ import com.yene.bustiming.R;
 public class MyFavouritStop extends BaseAdapter {
 	 
     private static final String TAG = "CUSTOMLISTADAPTER";
-	private ArrayList<BusStopFile> busStopList;
+	private ArrayList<EachBusStop> busStopList;
     private LayoutInflater layoutInflater;
  
-    public MyFavouritStop(Context context, ArrayList<BusStopFile> busStopList) {
+    public MyFavouritStop(Context context, ArrayList<EachBusStop> busStopList) {
         this.busStopList 	= busStopList;
         layoutInflater 		= LayoutInflater.from(context);
     }
@@ -53,8 +53,8 @@ public class MyFavouritStop extends BaseAdapter {
         }
         
         
-        holder.stopName.setText(""+busStopList.get(position).toward);
-        holder.busNumber.setText(""+busStopList.get(position).bus.trim());
+        //holder.stopName.setText(""+busStopList.get(position).toward);
+        //holder.busNumber.setText(""+busStopList.get(position).bus);
         holder.toward.setText(""+busStopList.get(position).stopName);
  
         return convertView;

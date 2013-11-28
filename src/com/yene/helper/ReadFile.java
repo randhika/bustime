@@ -8,7 +8,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import com.yene.bustiming.BusStopFile;
+import com.yene.bustiming.EachBusStop;
 
 import android.util.Log;
 
@@ -16,19 +16,19 @@ import android.util.Log;
 
  
 public class ReadFile  {	
-	ArrayList <BusStopFile> busCollection = new ArrayList<BusStopFile>();
-	ArrayList <BusStopFile> nearby = new ArrayList<BusStopFile>();
+	ArrayList <EachBusStop> busCollection = new ArrayList<EachBusStop>();
+	ArrayList <EachBusStop> nearby = new ArrayList<EachBusStop>();
 	static String   CALLER= " CALLER CLASS";
 	static int count =0;
 	public ReadFile() {
-	      System.out.println("-------------------: ");
-	      System.out.println("Object BufferedReaderExample: ");
+	      //System.out.println("-------------------: ");
+	      //System.out.println("Object BufferedReaderExample: ");
 	   }
 	public ReadFile(String klass) {
-	     Log.e(CALLER, klass );
+	     //Log.e(CALLER, klass );
 	   }
 	
-	public ArrayList<BusStopFile> eachStop(){
+	public ArrayList<EachBusStop> eachStop(){
 		
 		return nearby;
 	}
@@ -66,8 +66,8 @@ public class ReadFile  {
 	}
 	public  void readName(InputStream  in){
 		BufferedReader br;
-		System.out.println("-------------------: ");
-	    System.out.println("Object InputStream: ");
+		//System.out.println("-------------------: ");
+	    //System.out.println("Object InputStream: ");
 		
 		try {
 			br = new BufferedReader(new InputStreamReader(in));
@@ -85,7 +85,7 @@ public class ReadFile  {
 						lat 		= name[3];
 						lng 		= name[4];
 						bus 		= name[5];						
-						busCollection.add(new BusStopFile( Id, stopname,lat,lng,bus,toward ));
+						busCollection.add(new EachBusStop( Id, stopname,lat,lng,bus,toward ));
 				}
 				count++;
 			}
@@ -110,12 +110,11 @@ public class ReadFile  {
 		
 	}
 	
-	public ArrayList<BusStopFile> findBusStop(double nearLat, double nearLng){
-		Log.e("nearLat:", ""+nearLat);
-		Log.e("nearLng:", ""+nearLng);
-		int counts = 0;
+	public ArrayList<EachBusStop> findBusStop(double nearLat, double nearLng){
+		//Log.e(CALLER, ""+nearLat);
+		//Log.e(CALLER, ""+nearLng);
 		
-		for(BusStopFile item :busCollection ){
+		for(EachBusStop item :busCollection ){
 			
 			double lat ,lng;
 			lat 		= Double.parseDouble(""+item.getStopLat());
@@ -124,15 +123,10 @@ public class ReadFile  {
 			//Log.e("distance: ", ""+d);
 			
 			if(d < 0.5){
-				
+				item.setDistance(""+d);
 				nearby.add(item);
-				counts++;
 				}
 			}
-		Log.e("Done Near by top: ","-------------------: \n"+nearby.size());
-		Log.e("Counts: ","-------------------: \n"+counts);
-	
-		
 		return nearby;	
 	}
 	

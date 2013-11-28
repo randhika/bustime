@@ -23,10 +23,10 @@
         android:id="@+id/toward"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="26dp"
+        android:layout_marginTop="6dp"
         android:layout_marginRight="100dp"
         android:text=""
-        android:textColor="#336699"
+        android:textColor="#440000"
         android:textSize="20sp" />
     <TextView
         android:id="@+id/stopName"

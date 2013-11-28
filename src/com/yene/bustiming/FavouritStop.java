@@ -16,10 +16,11 @@ public class FavouritStop extends ListActivity {
 	public final static String BUS_NO_MESSAGE 	= "com.yene.BUSNUMBER";
 	public final static String TOWARD 			= "com.yene.TOWARD";
 	public final static String BUSLIST 			= "com.yene.BUSSTOP";
+	public final static String KLASS			= "FavouritStop";
 	private Context context;
 	private DatabaseHandler db ;
 	private ConnectionDetector cd;
-	private ArrayList<BusStopFile> myFavourit 	= new ArrayList<BusStopFile>();
+	private ArrayList<EachBusStop> myFavourit 	= new ArrayList<EachBusStop>();
 	private boolean isConnected = false;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +52,7 @@ public class FavouritStop extends ListActivity {
 	    	 intent.putExtra(BUS_NO_MESSAGE, search_term);
 	    	 intent.putExtra(TOWARD, toward);
 	    	 intent.putExtra(BUSLIST, bus);
+	    	 //intent.putExtra(KLASS,"NOSAVE");
 	 	     startActivity(intent);
 	    }
 	}

@@ -8,10 +8,12 @@ public class BusStopObject  implements Comparable<BusStopObject>{
 	    private String towards;
 	    private String lineID;
 	    
-	    public BusStopObject(String towards, String busNumber ,String countDown){
-	    	this.busNumber = busNumber;
-	    	this.towards = towards;
-	    	this.countDown=countDown;
+	    public BusStopObject(String towards, String busNumber ,String countDown, String stopName , String lineID){
+	    	this.busNumber 	= 	busNumber;
+	    	this.towards 	= 	towards;
+	    	this.countDown	= 	countDown;
+	    	this.stopName 	=	stopName;
+	    	this.lineID 	=	lineID;
 	    }
 	    
 	    public String getLineID() {

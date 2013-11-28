@@ -21,11 +21,12 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.yene.bustiming.BusStop;
+import com.yene.bustiming.Direction;
 import com.yene.bustiming.EachBusStop;
 import com.yene.bustiming.ConnectionDetector;
 import com.yene.bustiming.FavouritStop;
-
 import com.yene.bustiming.R;
+
 import com.yene.fragment.AppSectionsPagerAdapter;
 import com.yene.helper.ReadFile;
 
@@ -59,7 +60,7 @@ import android.widget.Toast;
 
 
  
-public class MapView  extends FragmentActivity  implements LocationListener ,OnInfoWindowClickListener,ActionBar.TabListener
+public class MapViewEachBus  extends FragmentActivity  implements LocationListener ,OnInfoWindowClickListener,ActionBar.TabListener
 , GooglePlayServicesClient.ConnectionCallbacks,     GooglePlayServicesClient.OnConnectionFailedListener{
     private static final String TAG 			= "MapView";
     public final static String BUS_NO_MESSAGE 	= "com.yene.BUSNUMBER";
@@ -83,7 +84,7 @@ public class MapView  extends FragmentActivity  implements LocationListener ,OnI
 	private Criteria criteria;
 	private AppSectionsPagerAdapter mAppSectionsPagerAdapter;
     private ViewPager mViewPager;
-    
+    private ArrayList<String> item = new ArrayList<String>();
   
     
     // A request to connect to Location Services
@@ -111,6 +112,8 @@ public class MapView  extends FragmentActivity  implements LocationListener ,OnI
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_other);
         mAppSectionsPagerAdapter = new AppSectionsPagerAdapter(getSupportFragmentManager());
+        Intent intent 	= getIntent();
+        item = intent.getStringArrayListExtra(Direction.LINEID);
         
         final ActionBar actionBar = getActionBar();
         
@@ -250,8 +253,7 @@ public class MapView  extends FragmentActivity  implements LocationListener ,OnI
      */
     
     public void getGpsCoor(double lat , double lng){    	
-    	busStopLocation.clear();
-		busStopLocation = bf.findBusStop(lat,lng);		
+    			
 		setUpMapIfNeeded();
 	}
 
@@ -284,19 +286,20 @@ public class MapView  extends FragmentActivity  implements LocationListener ,OnI
     private void setUpMap() {
     	Log.d(TAG,"MapView setUpMap : " + busStopLocation.size());
     	markerBusStop 	= new MarkerOptions();
-    	//Marker m;
-    	for(EachBusStop item : busStopLocation){
-    		
-    		Double lat 		= Double.parseDouble(item.getStopLat());
-    		Double lng 		= Double.parseDouble(item.getStopLng());
-    		
-    		String toward = item.toward;
-    		//System.out.print(item.toward);
-    		
-    		mMap.addMarker(markerBusStop.position(new LatLng(lat, lng)).title("Toward: "+toward).snippet(item.bus +"  {id: "+item.stopId+"}").icon(BitmapDescriptorFactory.fromResource(R.drawable.bus)));
-    		//marker.add(m);
-    		
-    	}
+    	
+    	item.remove(0);
+   	 for(int index = 0 ; index < item.size(); index++){
+   		 	String []eachBusStop	= item.get(index).split(",");
+   		 	Double lat 		= Double.parseDouble(eachBusStop[2]);
+   		 	Double lng 		= Double.parseDouble(eachBusStop[3]);
+   		 	String stopId 	= eachBusStop[1].replace("\"", "");
+   		 	String busNo	= eachBusStop[4].replace("\"","");
+   		 	mMap.addMarker(markerBusStop.position(new LatLng(lat, lng)).title("Toward: "+eachBusStop[5]).snippet(busNo +"{id: "+stopId+"}").icon(BitmapDescriptorFactory.fromResource(R.drawable.bus)));
+
+
+   		 	Log.e(TAG+stopId,stopId);
+   		 
+	 }
     	
         mMap.setTrafficEnabled(true);
         mMap.getUiSettings().setMyLocationButtonEnabled(true);
@@ -309,7 +312,7 @@ public class MapView  extends FragmentActivity  implements LocationListener ,OnI
 	@Override
 	public void onLocationChanged(Location location) {
 		
-		if(mMap != null){mMap.clear();}
+		//if(mMap != null){mMap.clear();}
 		user = new MarkerOptions();		
 		lat = location.getLatitude();
 		lng = location.getLongitude();
@@ -370,7 +373,7 @@ public class MapView  extends FragmentActivity  implements LocationListener ,OnI
 			Toast toast = Toast.makeText(context, text, duration);
 			toast.show();
 	    }else if(!isConnected){	
-			cd.showAlertDialog(MapView.this, "No Connection", "Please enable your internet connection.", false);
+			cd.showAlertDialog(MapViewEachBus.this, "No Connection", "Please enable your internet connection.", false);
 	    }else if(isConnected){
 	    	 intent.putExtra(BUS_NO_MESSAGE, search_term);
 	    	 intent.putExtra(TOWARD, toward);
@@ -392,18 +395,18 @@ public class MapView  extends FragmentActivity  implements LocationListener ,OnI
 	       
 	        case R.id.mystop:
 	        	Toast.makeText(this,"Loading  favourit...", Toast.LENGTH_LONG).show();
-	        	Intent intent2 = new Intent(this, FavouritStop.class);
+	        	final Intent intent2 = new Intent(this, FavouritStop.class);
 	        	startActivity(intent2);
 	        	return true;
 	        case R.id.search:
-	        	cd.showAlertDialog(MapView.this, "Coming Soon...", "Search via BUS, POSTCODE , BUS STOP ID.", false);
+	        	cd.showAlertDialog(MapViewEachBus.this, "Coming Soon...", "Search via BUS, POSTCODE , BUS STOP ID.", false);
 	        	return true;
 	        case R.id.reload:
 	        	Toast.makeText(this,"Loading Current Location...", Toast.LENGTH_LONG).show();
 	        	
 	        	 if (servicesConnected()) {	        		
-	        		 Location currentLocation = mLocationClient.getLastLocation();
-	        		 String lng=LocationUtils.getLatLng(this, currentLocation);
+	        		 final Location currentLocation = mLocationClient.getLastLocation();
+	        		 final String lng=LocationUtils.getLatLng(this, currentLocation);
 	        		 Log.e("lng", lng);
 	        		 onLocationChanged(currentLocation);
 	        	 }
@@ -423,8 +426,8 @@ public class MapView  extends FragmentActivity  implements LocationListener ,OnI
 	     protected void onPostExecute(Long result) {
 	    	 
 	    	getGpsCoor(lat,lng);
-	    	mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lat, lng), 15));
-	    	Log.e("lat: "+lat,"lng"+ lng);
+	    	mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lat, lng), 11));
+	    	
 	      	user = new MarkerOptions();	
 			mMap.addMarker(user.position(new LatLng(lat, lng)));
 			mMap.addCircle(new CircleOptions().center(new LatLng(lat, lng)).radius(550).strokeColor(0x40336699).fillColor(0x20336699).strokeWidth(4));
@@ -434,7 +437,7 @@ public class MapView  extends FragmentActivity  implements LocationListener ,OnI
 		@Override
 		protected Long doInBackground(URL... params) {
 			bf= new ReadFile();
-			InputStream is = MapView.this.getResources().openRawResource(R.drawable.busstop);
+			InputStream is = MapViewEachBus.this.getResources().openRawResource(R.drawable.busstop);
 			bf.readName(is);
 			return null;
 		}
