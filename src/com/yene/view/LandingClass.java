@@ -13,6 +13,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
+import android.widget.LinearLayout;
+
 import com.google.android.gms.*;
 public class LandingClass extends FragmentActivity {
 	private AdView adView;
@@ -37,6 +39,19 @@ public class LandingClass extends FragmentActivity {
 		mapView 	= new Intent(this, MapView.class);
 		searchBus 	= new Intent(this, Direction.class);
 		favourit 	= new Intent(this, FavouritStop.class);
+		
+		   // Lookup your LinearLayout assuming it's been given
+	    // the attribute android:id="@+id/mainLayout".
+	    LinearLayout layout = (LinearLayout)findViewById(R.id.adsView);
+
+	    // Add the adView to it.
+	    layout.addView(adView);
+
+	    // Initiate a generic request.
+	    AdRequest adRequest = new AdRequest.Builder().build();
+
+	    // Load the adView with the ad request.
+	    adView.loadAd(adRequest);
 	}
 
 	@Override

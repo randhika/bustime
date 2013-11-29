@@ -4,7 +4,8 @@
        android:layout_height="wrap_content"
        android:layout_alignLeft="@+id/button1"
        android:layout_alignParentTop="true"
-       android:orientation="vertical" >
+       android:orientation="vertical"
+       android:id="@+id/adsView" >
             
   <Button
         android:id="@+id/button1"
