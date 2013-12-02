@@ -5,11 +5,15 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
  
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 
@@ -21,10 +25,11 @@ public class SingelBusStop {
     private static final String TAG = "SINGLE BUS STOP";
 	static InputStream is = null;
     ArrayList<String> result;
+    
  
     // constructor
     public SingelBusStop() {
-    	 Log.d(TAG,"Get data from web has strated");
+    	 Log.e(TAG,"Get data from web has strated");
     }
  
     public ArrayList<String> getJSONFromUrl(String url) {
@@ -65,5 +70,22 @@ public class SingelBusStop {
         return result;
  
     }
+    
+    public void sendGet(String url) throws Exception {
+    	 
+    	HttpClient client = new DefaultHttpClient();
+    	HttpGet request = new HttpGet("http://www.vogella.com");
+    	HttpResponse response = client.execute(request);
+
+    	// Get the response
+    	BufferedReader rd = new BufferedReader
+    	  (new InputStreamReader(response.getEntity().getContent()));
+    	    
+    	String line = "";
+    	while ((line = rd.readLine()) != null) {
+    	  Log.e(TAG,line);
+    	} 
+ 
+	}
 }
 

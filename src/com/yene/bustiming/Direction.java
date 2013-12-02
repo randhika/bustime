@@ -44,7 +44,7 @@ public class Direction extends FragmentActivity {
 	}
 	
 	public void searchBus (View v){
-		busNumber = mEdit.getText().toString();
+		busNumber = mEdit.getText().toString().trim().replace(" ", "");
 		new DownloadFilesTask().execute();
 		Log.e(TAG,busNumber);
 		

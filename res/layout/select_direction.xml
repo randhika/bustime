@@ -27,6 +27,6 @@
         android:layout_marginTop="150dp"
         android:background="@drawable/green"
         android:onClick="searchBus"
-        android:text="Search" />
+        android:text="Search for Bus" />
  
 </RelativeLayout>

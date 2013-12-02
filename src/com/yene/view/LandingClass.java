@@ -1,17 +1,21 @@
 package com.yene.view;
 
+import java.util.ArrayList;
+
 import com.yene.bustiming.ConnectionDetector;
 import com.google.android.gms.ads.*;
 
 import com.yene.bustiming.Direction;
 import com.yene.bustiming.FavouritStop;
 import com.yene.bustiming.R;
+import com.yene.bustiming.SingelBusStop;
 
 import android.content.Context;
 import android.content.Intent;
 
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 
@@ -23,6 +27,8 @@ public class LandingClass extends FragmentActivity {
 	private Intent searchBus ;
 	private ConnectionDetector cd;
 	private boolean isConnected = false;
+	private ArrayList<String> joke = new ArrayList<String>();
+	
 	private Context context;
 	@Override
 	protected void onCreate(Bundle arg0) {
@@ -52,6 +58,10 @@ public class LandingClass extends FragmentActivity {
 
 	    // Load the adView with the ad request.
 	    adView.loadAd(adRequest);
+	    
+	 
+	    
+	    
 	}
 
 	@Override
